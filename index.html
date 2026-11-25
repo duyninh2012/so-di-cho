@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sổ Đi Chợ & Bảng Kê 01/TNDN - CƠM LONG NINH</title>
+    <style>
+        :root {
+            --primary: #047857;
+            --primary-dark: #065f46;
+            --primary-light: #d1fae5;
+            --primary-soft: #ecfdf5;
+            --amber: #d97706;
+            --amber-light: #fef3c7;
+            --rose: #e11d48;
+            --rose-light: #ffe4e6;
+            --sky: #0284c7;
+            --sky-light: #e0f2fe;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--slate-100);
+            color: var(--slate-900);
+            padding-bottom: 92px;
+            line-height: 1.45;
+            overflow-x: hidden;
+        }
+
+        /* Tiện ích chung */
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .flex-wrap { flex-wrap: wrap; }
+        .flex-1 { flex: 1; }
+        .shrink-0 { flex-shrink: 0; }
+        .gap-1 { gap: 4px; }
+        .gap-2 { gap: 8px; }
+        .gap-3 { gap: 12px; }
+        .w-full { width: 100%; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: 700; }
+        .font-extrabold { font-weight: 800; }
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Toast thông báo */
+        #toast-container {
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 92%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast-item {
+            padding: 13px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            animation: slideDown 0.22s ease-out;
+        }
+        .toast-success { background: #065f46; border: 1px solid #34d399; }
+        .toast-error { background: #be123c; border: 1px solid #fda4af; }
+        .toast-info { background: #1e293b; border: 1px solid #64748b; }
+
+        @keyframes slideDown {
+            from { transform: translateY(-16px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Header cố định */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: linear-gradient(135deg, #047857, #065f46);
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(4, 120, 87, 0.25);
+        }
+        .header-inner {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .brand-title {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            line-height: 1.2;
+        }
+        .sync-pill {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #d1fae5;
+            margin-top: 2px;
+        }
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fbbf24;
+        }
+        .sync-dot.connected { background: #34d399; }
+
+        /* Bộ chọn ngày trên Header */
+        .date-nav-box {
+            display: flex;
+            align-items: center;
+            background: rgba(6, 78, 59, 0.85);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 12px;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+        .date-step-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .date-step-btn:active { background: rgba(255,255,255,0.2); }
+        #active-date-picker {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            width: 112px;
+            text-align: center;
+            outline: none;
+        }
+        #active-date-picker::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        /* Khung nội dung chính */
+        main {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 15px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--slate-200);
+            margin-bottom: 14px;
+        }
+
+        /* Nút bấm chuẩn Mobile-First */
+        .btn {
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: transform 0.08s ease, opacity 0.15s ease;
+            text-decoration: none;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-lg { padding: 14px 16px; font-size: 15px; }
+        .btn-md { padding: 10px 14px; font-size: 13px; }
+        .btn-sm { padding: 7px 11px; font-size: 12px; border-radius: 9px; }
+
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-amber { background: #f59e0b; color: #fff; }
+        .btn-rose { background: var(--rose); color: #fff; }
+        .btn-sky { background: var(--sky); color: #fff; }
+        .btn-dark { background: var(--slate-800); color: #fff; }
+        .btn-soft-green { background: var(--primary-soft); color: var(--primary-dark); border: 1px solid #a7f3d0; }
+        .btn-soft-sky { background: var(--sky-light); color: #0369a1; border: 1px solid #bae6fd; }
+        .btn-soft-rose { background: var(--rose-light); color: #be123c; border: 1px solid #fecdd3; }
+        .btn-soft-slate { background: var(--slate-100); color: var(--slate-700); border: 1px solid var(--slate-200); }
+
+        /* Input chuẩn */
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--slate-600);
+            margin-bottom: 5px;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            border: 1.5px solid var(--slate-300);
+            border-radius: var(--radius-md);
+            padding: 11px 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--slate-900);
+            background: #fff;
+            outline: none;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.12);
+        }
+
+        /* Checklist mẫu */
+        .filter-chip {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid var(--slate-200);
+            background: var(--slate-50);
+            color: var(--slate-600);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .filter-chip.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-height: 210px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+        @media (min-width: 540px) {
+            .checklist-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        .tpl-chip-btn {
+            background: var(--slate-50);
+            border: 1.5px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 10px 11px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .tpl-chip-btn:active {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            transform: scale(0.98);
+        }
+
+        /* Thẻ nhóm Nhà cung cấp trong ngày */
+        .supplier-group-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            border: 1.5px solid var(--slate-200);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 14px;
+        }
+        .supplier-group-header {
+            background: var(--slate-50);
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .item-row {
+            padding: 12px 14px;
+            border-bottom: 1px dashed var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .item-row:last-child { border-bottom: none; }
+
+        .price-badge-up {
+            display: inline-block;
+            background: #ffe4e6;
+            color: #be123c;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .price-badge-down {
+            display: inline-block;
+            background: #d1fae5;
+            color: #065f46;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        /* Nút gạt trạng thái thanh toán của từng mối */
+        .status-toggle-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            background: var(--slate-100);
+            padding: 4px;
+            border-radius: 11px;
+        }
+        .status-pill-btn {
+            border: none;
+            padding: 8px 4px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            background: transparent;
+            color: var(--slate-600);
+        }
+        .status-pill-btn.active-tm { background: #059669; color: #fff; }
+        .status-pill-btn.active-ck { background: #0284c7; color: #fff; }
+        .status-pill-btn.active-no { background: #e11d48; color: #fff; }
+
+        /* Bảng kế toán Mẫu 01/TNDN */
+        .ledger-wrapper {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            border: 1.5px solid var(--slate-300);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .ledger-doc-head {
+            background: #0f172a;
+            color: #fff;
+            padding: 14px;
+            font-size: 12px;
+        }
+        .ledger-scroll {
+            overflow-x: auto;
+            max-height: 55vh;
+        }
+        .ledger-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+        }
+        .ledger-table th, .ledger-table td {
+            border: 1px solid #94a3b8;
+            padding: 8px 10px;
+            white-space: nowrap;
+        }
+        .ledger-table thead th {
+            background: #bae6fd;
+            color: #0c4a6e;
+            font-weight: 800;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .ledger-table tbody tr:nth-child(even) { background: #f8fafc; }
+        .months-bar {
+            background: #0f172a;
+            padding: 8px;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            border-top: 1px solid #334155;
+        }
+        .month-tab-btn {
+            padding: 8px 14px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #cbd5e1;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .month-tab-btn.active {
+            background: #10b981;
+            color: #fff;
+            border-color: #34d399;
+        }
+
+        /* Thanh điều hướng cố định dưới đáy màn hình (5 Tab) */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: #ffffff;
+            border-top: 1px solid var(--slate-200);
+            box-shadow: 0 -3px 14px rgba(15, 23, 42, 0.08);
+            padding-bottom: env(safe-area-inset-bottom, 4px);
+        }
+        .bottom-nav-inner {
+            max-width: 760px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+        }
+        .nav-btn {
+            border: none;
+            background: transparent;
+            padding: 9px 2px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--slate-500);
+            cursor: pointer;
+            position: relative;
+        }
+        .nav-btn.active {
+            color: var(--primary);
+            font-weight: 800;
+        }
+        .nav-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+        .debt-dot {
+            position: absolute;
+            top: 7px;
+            right: 24%;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--rose);
+            border: 2px solid #fff;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            background: rgba(15, 23, 42, 0.65);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        @media (min-width: 600px) {
+            .modal-backdrop { align-items: center; padding: 16px; }
+        }
+        .modal-sheet {
+            background: #fff;
+            width: 100%;
+            max-width: 540px;
+            border-radius: 24px 24px 0 0;
+            padding: 18px;
+            max-height: 92vh;
+            overflow-y: auto;
+            animation: slideUp 0.2s ease-out;
+        }
+        @media (min-width: 600px) {
+            .modal-sheet { border-radius: 24px; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(24px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- THÔNG BÁO TOAST -->
+    <div id="toast-container"></div>
+
+    <!-- HEADER CỐ ĐỊNH -->
+    <header>
+        <div class="header-inner">
+            <div class="brand-box">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fde047" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 11h16a1 1 0 0 1 1 1v.5a7.5 7.5 0 0 1-7.5 7.5h-3A7.5 7.5 0 0 1 3 12.5V12a1 1 0 0 1 1-1Z"/>
+                        <path d="M7 11c0-3 2-5 5-5s5 2 5 5"/>
+                        <path d="M9 3v2M12 2v3M15 3v2"/>
+                    </svg>
+                </div>
+                <div style="min-width:0;">
+                    <div id="header-store-name" class="brand-title truncate">CƠM LONG NINH</div>
+                    <div class="sync-pill">
+                        <span id="sync-status-dot" class="sync-dot"></span>
+                        <span id="sync-status-text">Lưu máy (Chưa nối Sheet)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bộ chọn ngày có nút lùi/tiến nhanh -->
+            <div class="date-nav-box">
+                <button type="button" class="date-step-btn" onclick="shiftActiveDate(-1)" title="Ngày hôm trước">‹</button>
+                <input type="date" id="active-date-picker">
+                <button type="button" class="date-step-btn" onclick="shiftActiveDate(1)" title="Ngày hôm sau">›</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG 5 TAB -->
+    <main>
+
+        <!-- ========================================================= -->
+        <!-- TAB 1: ĐI CHỢ HÀNG NGÀY                                   -->
+        <!-- ========================================================= -->
+        <section id="tab-daily" class="tab-panel">
+            <!-- Thẻ tổng hợp chi tiêu ngày -->
+            <div class="card">
+                <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+                    <div>
+                        <div style="font-size: 11px; font-weight: 800; color: var(--slate-400); text-transform: uppercase;">Tổng tiền đi chợ ngày</div>
+                        <div id="daily-total-amount" style="font-size: 28px; font-weight: 800; color: var(--primary); margin-top: 2px;">0 đ</div>
+                    </div>
+                    <div class="text-right" style="font-size: 13px;">
+                        <div style="color: var(--slate-600);">Đã trả: <strong id="daily-paid-amount" style="color: var(--slate-900);">0 đ</strong></div>
+                        <div style="color: var(--rose); margin-top: 3px;">Ghi nợ: <strong id="daily-debt-amount">0 đ</strong></div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button type="button" onclick="openQuickAddModal()" class="btn btn-primary btn-lg">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                        <span>Nhập món mới</span>
+                    </button>
+                    <button type="button" onclick="switchTab('note')" class="btn btn-amber btn-lg">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8 19 13M17.8 6.2 19 5M3 21l9-9M12.2 6.2 11 5"/></svg>
+                        <span>Dán ghi chú</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Danh mục đi chợ nhanh (Checklist mẫu) -->
+            <div class="card">
+                <div class="flex items-center justify-between" style="margin-bottom: 8px;">
+                    <div class="font-extrabold" style="font-size: 14px; color: var(--slate-800);">⚡ Chọn nhanh nguyên liệu mẫu</div>
+                    <button type="button" onclick="openChecklistManagerModal()" class="btn btn-soft-green btn-sm">+ Thêm / Sửa mẫu</button>
+                </div>
+                <input type="text" id="checklist-search-input" oninput="renderQuickChecklist()" placeholder="Tìm nhanh nguyên liệu mẫu..." class="form-input" style="padding: 8px 11px; font-size: 13px; margin-bottom: 8px;">
+                <div id="checklist-supplier-filter" class="flex gap-1 no-scrollbar" style="overflow-x: auto; padding-bottom: 8px; margin-bottom: 4px;"></div>
+                <div id="quick-checklist-grid" class="checklist-grid"></div>
+            </div>
+
+            <!-- Danh sách gom nhóm theo Mối hàng trong ngày -->
+            <div class="flex items-center justify-between" style="margin: 14px 2px 10px;">
+                <div class="font-extrabold" style="font-size: 15px; color: var(--slate-800);">
+                    Phiếu nhập theo Mối hàng (<span id="daily-supplier-count">0</span>)
+                </div>
+                <button type="button" onclick="syncAllToGoogleSheets()" class="btn btn-soft-sky btn-sm">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M20 16.5A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9"/></svg>
+                    <span>Đồng bộ Sheet</span>
+                </button>
+            </div>
+            <div id="daily-grouped-list"></div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAB 2: NHẬP NHANH TỪ GHI CHÚ THÔNG MINH                   -->
+        <!-- ========================================================= -->
+        <section id="tab-note" class="tab-panel hidden">
+            <div class="card">
+                <div class="flex items-start justify-between gap-2" style="margin-bottom: 10px;">
+                    <div>
+                        <div class="font-extrabold" style="font-size: 17px; color: var(--slate-900);">✨ Nhập hàng từ Ghi chú</div>
+                        <div style="font-size: 12px; color: var(--slate-500); margin-top: 2px;">
+                            Dán tin nhắn đi chợ (có hoặc không có tên mối hàng). Tự tách số lượng, đơn vị và tiền tệ.
+                        </div>
+                    </div>
+                    <button type="button" onclick="fillSampleNote()" class="btn btn-soft-slate btn-sm shrink-0">Dán mẫu thử</button>
+                </div>
+
+                <textarea id="smart-note-input" rows="5" class="form-textarea"
+                    style="font-size: 16px; line-height: 1.5;"
+                    placeholder="Ví dụ 1: Cải ngọt 2 kg 40.000 hành tây 1 kg 15.000 dưa chuột 2 kg 40.000 thịt lợn 1 kg 150.000&#10;Ví dụ 2: chị Thắm cải ngọt 4kg 100000 nga phong hành tây 1kg12000"></textarea>
+
+                <div class="flex items-center justify-between flex-wrap gap-2" style="margin-top: 10px;">
+                    <div class="flex items-center gap-2">
+                        <span style="font-size: 12px; font-weight: 700; color: var(--slate-600);">Thanh toán:</span>
+                        <select id="note-default-status" class="form-select" style="width: auto; padding: 7px 10px; font-size: 13px;">
+                            <option value="TM">Tiền mặt (TM)</option>
+                            <option value="CK">Chuyển khoản (CK)</option>
+                            <option value="Nợ">Ghi nợ</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="clearSmartNote()" class="btn btn-soft-rose btn-sm">Xóa chữ</button>
+                        <button type="button" onclick="runSmartNoteParser(true)" class="btn btn-primary btn-md">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            <span>Phân tích ghi chú</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kết quả nhận diện & Xem trước -->
+                <div id="note-preview-wrapper" class="hidden" style="margin-top: 14px; padding-top: 14px; border-top: 1.5px solid var(--slate-200);">
+                    <div class="flex items-center justify-between" style="margin-bottom: 10px;">
+                        <span style="font-size: 12px; font-weight: 800; color: var(--primary); text-transform: uppercase;">
+                            ✓ Nhận diện được <span id="note-parsed-count">0</span> mặt hàng (chạm để sửa):
+                        </span>
+                        <strong id="note-parsed-total" style="font-size: 15px; color: var(--slate-900);">0 đ</strong>
+                    </div>
+                    <div id="note-preview-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 52vh; overflow-y: auto; margin-bottom: 12px;"></div>
+                    <button type="button" onclick="commitParsedNoteItems()" class="btn btn-primary btn-lg w-full">
+                        Xác nhận lưu vào Sổ ngày <span id="note-target-date-label"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hướng dẫn sử dụng ghi chú -->
+            <div style="background: var(--amber-light); border: 1px solid #fcd34d; border-radius: 16px; padding: 13px; font-size: 12px; color: #78350f;">
+                <div class="font-extrabold" style="margin-bottom: 5px;">💡 Mẹo nhập ghi chú siêu nhanh ngoài chợ:</div>
+                <ul style="padding-left: 18px; display: flex; flex-direction: column; gap: 4px;">
+                    <li><strong>Không ghi tên mối hàng:</strong> Hệ thống tự tra cứu món trong Danh mục mẫu để gán đúng mối quen (VD: <i>Cải ngọt → Chị Thắm</i>, <i>Thịt lợn → Chị Thu</i>, <i>Gạo điệp → Đại lý Cường Thêm</i>).</li>
+                    <li><strong>Ghi kèm tên mối hàng:</strong> Ghi tên mối ở đầu nhóm (VD: <i>chị Thắm cải ngọt 4kg 100.000 nga phong hành tây 1kg12000</i>).</li>
+                    <li>Hỗ trợ mọi kiểu tiền tệ: <code>40.000</code>, <code>150000</code>, <code>45k</code>, <code>1.5tr</code>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAB 3: SỔ BẢNG KÊ 01/TNDN - ĐỦ 12 THÁNG                   -->
+        <!-- ========================================================= -->
+        <section id="tab-ledger" class="tab-panel hidden">
+            <div class="card">
+                <div class="flex items-center justify-between flex-wrap gap-2" style="margin-bottom: 10px;">
+                    <div>
+                        <div class="font-extrabold" style="font-size: 16px;">Sổ Bảng Kê 01/TNDN (12 Tháng)</div>
+                        <div style="font-size: 12px; color: var(--slate-500);">Chuẩn Thông tư 78/2014/TT-BTC • Vuốt ngang bảng để xem hết cột</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="ledger-year-select" onchange="changeLedgerYear(this.value)" class="form-select" style="width: auto; padding: 6px 10px; font-size: 13px;">
+                            <option value="2025">Năm 2025</option>
+                            <option value="2026" selected>Năm 2026</option>
+                            <option value="2027">Năm 2027</option>
+                        </select>
+                        <button type="button" onclick="exportMonthToCSV(false)" class="btn btn-primary btn-sm">Xuất Tháng <span id="export-month-num">11</span></button>
+                        <button type="button" onclick="exportMonthToCSV(true)" class="btn btn-dark btn-sm">Cả 12 Tháng</button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: var(--slate-50); padding: 10px; border-radius: 12px; border: 1px solid var(--slate-200); text-align: center;">
+                    <div>
+                        <div style="font-size: 11px; color: var(--slate-500);">Tổng chi Tháng <span class="ledger-month-label">11</span></div>
+                        <div id="ledger-month-total" class="font-extrabold" style="font-size: 14px; color: var(--primary);">0 đ</div>
+                    </div>
+                    <div style="border-left: 1px solid var(--slate-200); border-right: 1px solid var(--slate-200);">
+                        <div style="font-size: 11px; color: var(--slate-500);">Số dòng thu mua</div>
+                        <div id="ledger-month-count" class="font-extrabold" style="font-size: 14px;">0</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: var(--slate-500);">Còn nợ tháng này</div>
+                        <div id="ledger-month-debt" class="font-extrabold" style="font-size: 14px; color: var(--rose);">0 đ</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ledger-wrapper">
+                <div class="ledger-doc-head">
+                    <div class="flex justify-between flex-wrap gap-2" style="color: #cbd5e1; padding-bottom: 8px; border-bottom: 1px solid #334155;">
+                        <div>
+                            <div>Hộ kinh doanh / Doanh nghiệp: <strong id="doc-business-name" style="color: #fff;">CƠM LONG NINH</strong></div>
+                            <div>Mã số thuế: <strong id="doc-tax-id" style="color: #fff;">0108962157-001</strong></div>
+                            <div>Địa chỉ thu mua: <strong id="doc-address" style="color: #fff;">Tương Mai, Thanh Trì, Hà Nội</strong></div>
+                        </div>
+                        <div style="font-size: 11px;">
+                            <div class="font-bold" style="color: #fff;">Mẫu số: 01/TNDN</div>
+                            <div>(Ban hành kèm theo Thông tư số 78/2014/TT-BTC)</div>
+                        </div>
+                    </div>
+                    <div class="text-center" style="padding-top: 8px;">
+                        <div class="font-extrabold" style="color: #fde047; font-size: 13px;">BẢNG KÊ THU MUA HÀNG HÓA, DỊCH VỤ MUA VÀO KHÔNG CÓ HÓA ĐƠN</div>
+                        <div class="font-bold" style="color: #7dd3fc; font-size: 12px; margin-top: 2px;">
+                            Tháng <span id="doc-title-month">11</span> Năm <span id="doc-title-year">2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ledger-scroll">
+                    <table class="ledger-table">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Ngày tháng<br>thu mua</th>
+                                <th>Tên người bán - Địa chỉ</th>
+                                <th>Tên mặt hàng thu mua</th>
+                                <th>ĐVT</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá (đ)</th>
+                                <th>Thành tiền mua (đ)</th>
+                                <th>Ghi chú - Chứng từ</th>
+                                <th>ẢNH HÓA ĐƠN / CK</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-table-body"></tbody>
+                        <tfoot>
+                            <tr style="background: #fef3c7; font-weight: 800;">
+                                <td colspan="7" class="text-right">TỔNG CỘNG THÁNG <span class="ledger-month-label">11</span>:</td>
+                                <td id="ledger-footer-total" class="text-right" style="color: var(--primary);">0 đ</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div id="twelve-months-bar" class="months-bar no-scrollbar"></div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAB 4: CÔNG NỢ & CHỈNH SỬA MỐI HÀNG                       -->
+        <!-- ========================================================= -->
+        <section id="tab-debt" class="tab-panel hidden">
+            <div style="background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; border-radius: 18px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-md);">
+                <div class="flex items-center justify-between gap-2">
+                    <div>
+                        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #ffe4e6;">Tổng công nợ các mối hàng</div>
+                        <div id="total-all-debt" style="font-size: 28px; font-weight: 800; margin-top: 2px;">0 đ</div>
+                    </div>
+                    <button type="button" onclick="openSupplierModal()" class="btn btn-md shrink-0" style="background: #fff; color: #be123c;">
+                        + Thêm mối hàng
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <input type="text" id="supplier-search-input" oninput="renderDebtTab()" placeholder="🔍 Tìm tên mối hàng, địa chỉ hoặc mặt hàng..." class="form-input" style="font-size: 14px;">
+            </div>
+
+            <div id="suppliers-debt-list"></div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAB 5: CÀI ĐẶT, GOOGLE SHEETS & SAO LƯU                   -->
+        <!-- ========================================================= -->
+        <section id="tab-settings" class="tab-panel hidden">
+            <!-- Kết nối Google Sheets & Drive -->
+            <div class="card">
+                <div class="flex items-center gap-2" style="margin-bottom: 6px;">
+                    <span style="font-size: 18px;">☁️</span>
+                    <div class="font-extrabold" style="font-size: 16px;">Kết nối Google Sheets & Drive</div>
+                </div>
+                <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 10px;">
+                    Tự động tạo file Google Sheets 12 tháng và lưu ảnh hóa đơn/chuyển khoản lên Google Drive miễn phí 100%.
+                </p>
+                <label class="form-label">Đường dẫn Google Apps Script Web App URL:</label>
+                <input type="url" id="google-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="form-input" style="font-size: 13px; margin-bottom: 10px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <button type="button" onclick="saveGoogleScriptUrl()" class="btn btn-primary btn-md">Lưu liên kết</button>
+                    <button type="button" onclick="openAppsScriptGuideModal()" class="btn btn-soft-sky btn-md">Lấy mã tạo Sheet</button>
+                </div>
+                <button type="button" onclick="syncAllToGoogleSheets()" class="btn btn-dark btn-md w-full">
+                    Đẩy toàn bộ dữ liệu & ảnh lên Google Sheets ngay
+                </button>
+            </div>
+
+            <!-- Thông tin Quán trên Bảng Kê -->
+            <div class="card">
+                <div class="font-extrabold" style="font-size: 16px; margin-bottom: 10px;">🏪 Thông tin Quán trên Bảng Kê</div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <label class="form-label">Tên Hộ kinh doanh / Quán cơm</label>
+                        <input type="text" id="set-biz-name" class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">Mã số thuế</label>
+                        <input type="text" id="set-tax-id" class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">Địa chỉ thu mua</label>
+                        <input type="text" id="set-address" class="form-input">
+                    </div>
+                    <button type="button" onclick="saveBusinessProfile()" class="btn btn-primary btn-md w-full">Lưu thông tin quán</button>
+                </div>
+            </div>
+
+            <!-- Sao lưu & Khôi phục JSON -->
+            <div class="card">
+                <div class="font-extrabold" style="font-size: 16px; margin-bottom: 6px;">💾 Sao lưu & Khôi phục dữ liệu</div>
+                <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 10px;">
+                    Tải file sao lưu JSON về máy để không bao giờ mất dữ liệu khi đổi điện thoại mới.
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                    <button type="button" onclick="backupDataJSON()" class="btn btn-soft-sky btn-md">Tải file Sao lưu</button>
+                    <label class="btn btn-soft-green btn-md" style="cursor: pointer;">
+                        <span>Khôi phục file</span>
+                        <input type="file" accept=".json" class="hidden" onchange="restoreDataJSON(event)">
+                    </label>
+                </div>
+                <button type="button" onclick="resetToSampleData()" class="btn btn-soft-rose btn-sm w-full">Nạp lại dữ liệu mẫu quán cơm</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MÀN HÌNH (5 TAB LỚN) -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <button type="button" onclick="switchTab('daily')" data-tab="daily" class="nav-btn active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 11 4-7M19 11l-4-7M2 11h20M3.5 11l1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4M9 11l1 9M15 11l-1 9"/></svg>
+                <span>Đi chợ</span>
+            </button>
+            <button type="button" onclick="switchTab('note')" data-tab="note" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8 19 13M17.8 6.2 19 5M3 21l9-9M12.2 6.2 11 5"/></svg>
+                <span>Ghi chú</span>
+            </button>
+            <button type="button" onclick="switchTab('ledger')" data-tab="ledger" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+                <span>Sổ 12 Tháng</span>
+            </button>
+            <button type="button" onclick="switchTab('debt')" data-tab="debt" class="nav-btn">
+                <span id="nav-debt-badge" class="debt-dot hidden"></span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>Công nợ</span>
+            </button>
+            <button type="button" onclick="switchTab('settings')" data-tab="settings" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+                <span>Cài đặt</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 1: NHẬP / SỬA MẶT HÀNG ĐI CHỢ (TÍNH GIÁ NGƯỢC)     -->
+    <!-- ========================================================= -->
+    <div id="modal-quick-add" class="modal-backdrop hidden">
+        <div class="modal-sheet">
+            <div class="flex items-center justify-between" style="padding-bottom: 10px; border-bottom: 1px solid var(--slate-200); margin-bottom: 12px;">
+                <div id="modal-item-title" class="font-extrabold" style="font-size: 17px;">Nhập mặt hàng đi chợ</div>
+                <button type="button" onclick="closeModal('modal-quick-add')" class="btn btn-soft-slate btn-sm">✕</button>
+            </div>
+
+            <input type="hidden" id="edit-entry-id">
+
+            <div style="display: flex; flex-direction: column; gap: 11px;">
+                <div>
+                    <label class="form-label">Nhà cung cấp (Mối hàng)</label>
+                    <select id="item-supplier-select" class="form-select"></select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px;">
+                    <div>
+                        <label class="form-label">Tên mặt hàng</label>
+                        <input type="text" id="item-name-input" oninput="recalculateReversePrice()" placeholder="VD: Thịt lợn, Cải ngọt..." class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">Đơn vị tính</label>
+                        <input type="text" id="item-unit-input" value="kg" oninput="recalculateReversePrice()" class="form-input text-center">
+                    </div>
+                </div>
+
+                <!-- 2 Ô NHẬP CHÍNH TO RÕ -->
+                <div style="background: var(--primary-soft); border: 1.5px solid #a7f3d0; border-radius: 14px; padding: 12px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px;">
+                        <div>
+                            <label class="form-label" style="color: var(--primary-dark);">1. Số lượng mua</label>
+                            <input type="number" step="0.01" inputmode="decimal" id="item-qty-input" oninput="recalculateReversePrice()" placeholder="VD: 1.5" class="form-input" style="font-size: 18px; font-weight: 800;">
+                        </div>
+                        <div>
+                            <label class="form-label" style="color: var(--primary-dark);">2. Tổng tiền (VNĐ)</label>
+                            <input type="number" inputmode="numeric" id="item-total-input" oninput="recalculateReversePrice()" placeholder="VD: 150000" class="form-input" style="font-size: 18px; font-weight: 800; color: var(--primary);">
+                        </div>
+                    </div>
+                    <!-- Nút bấm nhanh thêm số 000 -->
+                    <div class="flex gap-2" style="margin-top: 8px;">
+                        <button type="button" onclick="multiplyTotalBy(1000)" class="btn btn-soft-green btn-sm flex-1">+ Thêm .000 đ</button>
+                        <button type="button" onclick="multiplyTotalBy(10000)" class="btn btn-soft-green btn-sm flex-1">+ Thêm 0.000 đ</button>
+                    </div>
+                </div>
+
+                <!-- Khung hiển thị Đơn giá tự tính + Cảnh báo chênh lệch giá -->
+                <div style="background: var(--slate-900); color: #fff; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                    <div>
+                        <div style="font-size: 11px; color: #94a3b8;">ĐƠN GIÁ TỰ ĐỘNG TÍNH</div>
+                        <div id="calc-unit-price-display" class="font-extrabold" style="font-size: 18px; color: #fde047;">0 đ / kg</div>
+                    </div>
+                    <div id="price-comparison-badge" class="text-right" style="font-size: 12px; font-weight: 700;"></div>
+                </div>
+
+                <!-- Trạng thái thanh toán -->
+                <div>
+                    <label class="form-label">Trạng thái thanh toán</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <label style="border: 1.5px solid var(--slate-200); border-radius: 10px; padding: 9px; text-align: center; font-size: 13px; font-weight: 700; cursor: pointer;">
+                            <input type="radio" name="item-pay-status" value="TM" checked> Tiền mặt
+                        </label>
+                        <label style="border: 1.5px solid var(--slate-200); border-radius: 10px; padding: 9px; text-align: center; font-size: 13px; font-weight: 700; cursor: pointer;">
+                            <input type="radio" name="item-pay-status" value="CK"> Chuyển khoản
+                        </label>
+                        <label style="border: 1.5px solid var(--slate-200); border-radius: 10px; padding: 9px; text-align: center; font-size: 13px; font-weight: 700; color: var(--rose); cursor: pointer;">
+                            <input type="radio" name="item-pay-status" value="Nợ"> Ghi nợ
+                        </label>
+                    </div>
+                </div>
+
+                <button type="button" onclick="saveEntryFromModal()" class="btn btn-primary btn-lg w-full">LƯU VÀO PHIẾU ĐI CHỢ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 2: XEM PHÓNG TO ẢNH HÓA ĐƠN / CHUYỂN KHOẢN           -->
+    <!-- ========================================================= -->
+    <div id="modal-image-viewer" class="modal-backdrop hidden">
+        <div class="modal-sheet" style="background: #0f172a; color: #fff;">
+            <div class="flex items-center justify-between" style="margin-bottom: 10px;">
+                <div>
+                    <div id="viewer-title" class="font-extrabold" style="font-size: 15px;">Ảnh chứng từ</div>
+                    <div id="viewer-filename" style="font-size: 11px; color: #94a3b8;"></div>
+                </div>
+                <button type="button" onclick="closeModal('modal-image-viewer')" class="btn btn-soft-slate btn-sm">✕</button>
+            </div>
+            <div class="text-center" style="background: #000; border-radius: 14px; overflow: hidden; margin-bottom: 12px;">
+                <img id="viewer-img-tag" src="" alt="Ảnh chứng từ" style="max-height: 60vh; max-width: 100%; object-fit: contain;">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <a id="viewer-download-btn" download="chung-tu.jpg" href="#" class="btn btn-primary btn-md">Tải ảnh về máy</a>
+                <button type="button" id="viewer-delete-btn" class="btn btn-rose btn-md">Xóa ảnh này</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 3: THÊM / CHỈNH SỬA MỐI HÀNG & DANH SÁCH MÓN QUEN   -->
+    <!-- ========================================================= -->
+    <div id="modal-supplier" class="modal-backdrop hidden">
+        <div class="modal-sheet">
+            <div class="flex items-center justify-between" style="padding-bottom: 10px; border-bottom: 1px solid var(--slate-200); margin-bottom: 12px;">
+                <div id="modal-supplier-title" class="font-extrabold" style="font-size: 17px;">Chỉnh sửa Mối hàng</div>
+                <button type="button" onclick="closeModal('modal-supplier')" class="btn btn-soft-slate btn-sm">✕</button>
+            </div>
+
+            <input type="hidden" id="edit-supplier-id">
+
+            <div style="display: flex; flex-direction: column; gap: 11px;">
+                <div>
+                    <label class="form-label">1. Tên người bán / Sạp hàng *</label>
+                    <input type="text" id="sup-name-input" placeholder="VD: Chị Thu, Chị Thắm..." class="form-input">
+                </div>
+                <div>
+                    <label class="form-label">2. Địa chỉ / Chợ (in trên Bảng kê 01/TNDN)</label>
+                    <input type="text" id="sup-addr-input" placeholder="VD: Phố Hồng Phúc, Chợ đầu mối phía Nam..." class="form-input">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div>
+                        <label class="form-label">3. SĐT / Ghi chú mặt hàng</label>
+                        <input type="text" id="sup-phone-input" placeholder="VD: Chuyên thịt lợn, bò" class="form-input" style="font-size: 13px;">
+                    </div>
+                    <div>
+                        <label class="form-label">4. Từ khóa nhận diện ghi chú</label>
+                        <input type="text" id="sup-alias-input" placeholder="VD: chị thu, thu, hồng phúc" class="form-input" style="font-size: 13px;">
+                    </div>
+                </div>
+
+                <!-- Quản lý danh sách nguyên liệu mặc định của mối hàng -->
+                <div style="background: var(--slate-50); border: 1.5px solid var(--slate-200); border-radius: 14px; padding: 11px;">
+                    <label class="form-label" style="color: var(--slate-800);">5. Nguyên liệu mặc định của mối hàng này (dùng cho Checklist & Ghi chú):</label>
+                    <div class="flex gap-1" style="margin-bottom: 8px;">
+                        <input type="text" id="sup-new-item-name" placeholder="Tên món (VD: Sườn non)" class="form-input flex-1" style="padding: 8px 10px; font-size: 13px;">
+                        <input type="text" id="sup-new-item-unit" value="kg" placeholder="ĐVT" class="form-input text-center" style="width: 58px; padding: 8px 4px; font-size: 13px;">
+                        <button type="button" onclick="addTempSupplierItem()" class="btn btn-primary btn-sm shrink-0">+ Thêm</button>
+                    </div>
+                    <div id="sup-modal-items-list" class="flex flex-wrap gap-1"></div>
+                </div>
+
+                <button type="button" onclick="saveSupplierForm()" class="btn btn-primary btn-lg w-full">LƯU THÔNG TIN MỐI HÀNG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 4: QUẢN LÝ DANH MỤC ĐI CHỢ NHANH                    -->
+    <!-- ========================================================= -->
+    <div id="modal-checklist-mgr" class="modal-backdrop hidden">
+        <div class="modal-sheet">
+            <div class="flex items-center justify-between" style="padding-bottom: 10px; border-bottom: 1px solid var(--slate-200); margin-bottom: 12px;">
+                <div class="font-extrabold" style="font-size: 17px;">Danh mục nguyên liệu mẫu</div>
+                <button type="button" onclick="closeModal('modal-checklist-mgr')" class="btn btn-soft-slate btn-sm">✕</button>
+            </div>
+            <div style="background: var(--slate-50); padding: 10px; border-radius: 12px; border: 1px solid var(--slate-200); margin-bottom: 12px;">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 6px; margin-bottom: 6px;">
+                    <input type="text" id="tpl-item-name" placeholder="Tên nguyên liệu" class="form-input" style="padding: 8px 10px; font-size: 13px;">
+                    <input type="text" id="tpl-item-unit" value="kg" placeholder="ĐVT" class="form-input text-center" style="padding: 8px; font-size: 13px;">
+                </div>
+                <select id="tpl-item-sup" class="form-select" style="padding: 8px 10px; font-size: 13px; margin-bottom: 8px;"></select>
+                <button type="button" onclick="addQuickTemplateItem()" class="btn btn-primary btn-md w-full">+ Thêm vào danh mục mẫu</button>
+            </div>
+            <div id="template-mgr-list" style="display: flex; flex-direction: column; gap: 6px; max-height: 45vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 5: MÃ GOOGLE APPS SCRIPT TỰ ĐỘNG TẠO SHEET 12 THÁNG -->
+    <!-- ========================================================= -->
+    <div id="modal-apps-script" class="modal-backdrop hidden">
+        <div class="modal-sheet">
+            <div class="flex items-center justify-between" style="padding-bottom: 8px; border-bottom: 1px solid var(--slate-200); margin-bottom: 10px;">
+                <div class="font-extrabold" style="font-size: 16px;">Tự tạo Google Sheets 12 Tháng & Drive</div>
+                <button type="button" onclick="closeModal('modal-apps-script')" class="btn btn-soft-slate btn-sm">✕</button>
+            </div>
+            <div style="font-size: 12px; color: var(--slate-700); display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;">
+                <div><strong>Bước 1:</strong> Truy cập <a href="https://script.google.com/home/start" target="_blank" style="color: var(--sky); font-weight: 700;">script.google.com</a> → bấm <b>Dự án mới (New Project)</b>.</div>
+                <div><strong>Bước 2:</strong> Xóa hết chữ cũ, bấm <b>Sao chép mã</b> bên dưới và dán vào.</div>
+                <div><strong>Bước 3:</strong> Bấm <b>Triển khai (Deploy) → Tùy chọn triển khai mới → Ứng dụng web (Web App)</b> → Quyền truy cập chọn <b>Bất kỳ ai (Anyone)</b> → Bấm Triển khai và dán link URL vào ứng dụng.</div>
+                <pre id="apps-script-code-box" style="background: #0f172a; color: #6ee7b7; padding: 10px; border-radius: 12px; font-size: 11px; max-height: 36vh; overflow: auto; font-family: monospace;"></pre>
+            </div>
+            <button type="button" onclick="copyAppsScriptCode()" class="btn btn-primary btn-lg w-full">Sao chép toàn bộ mã Google Apps Script</button>
+        </div>
+    </div>
+
+    <!-- INPUT ẨN CHỤP / CHỌN ẢNH -->
+    <input type="file" id="hidden-photo-input" accept="image/*" class="hidden" onchange="handlePhotoSelected(event)">
+
+    <script>
+        // =====================================================================
+        // 1. DỮ LIỆU MẶC ĐỊNH & LƯU TRỮ LOCALSTORAGE
+        // =====================================================================
+        const STORAGE_KEY = 'COM_LONG_NINH_APP_V2';
+
+        function getTodayISO() {
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            return new Date(now.getTime() - offset).toISOString().split('T')[0];
+        }
+
+        const DEFAULT_SUPPLIERS = [
+            { id: 'sup_thu', name: 'Chị Thu', address: 'Phố Hồng Phúc', phone: 'Chuyên thịt lợn, sườn, thịt bò', aliases: ['chị thu', 'cô thu', 'thu', 'hồng phúc'] },
+            { id: 'sup_hanh', name: 'Chị Hạnh', address: 'Phố Nguyễn An Ninh', phone: 'Chuyên đùi gà công nghiệp, trứng', aliases: ['chị hạnh', 'hạnh', 'nguyễn an ninh'] },
+            { id: 'sup_tien', name: 'Chú Hoàng Văn Tiền', address: 'Chợ đầu mối phía Nam', phone: 'Dưa chuột, tỏi, hành tây, cà rốt', aliases: ['chú tiền', 'hoàng văn tiền', 'tiền', 'chợ đầu mối'] },
+            { id: 'sup_tham', name: 'Chị Thắm', address: 'Chợ đầu mối phía Nam', phone: 'Cải ngọt, rau ngót, rau gia vị', aliases: ['chị thắm', 'thắm', 'cô thắm'] },
+            { id: 'sup_nga', name: 'Chị Nga Phong', address: 'Chợ đầu mối phía Nam', phone: 'Hành tây, cà rốt, củ quả', aliases: ['nga phong', 'chị nga', 'nga'] },
+            { id: 'sup_cuong', name: 'Đại lý Cường Thêm', address: 'Chợ đầu mối phía Nam', phone: 'Gạo điệp, bột mì, cốt dừa, đường vàng, dầu ăn', aliases: ['cường thêm', 'đại lý cường', 'cường', 'gạo'] },
+            { id: 'sup_hop', name: 'Phố Hàng Chiếu', address: 'Phố Hàng Chiếu', phone: 'Hộp cơm, thìa đũa, túi bóng', aliases: ['hàng chiếu', 'hàng hộp', 'hộp'] },
+            { id: 'sup_le', name: 'Mua lẻ ngoài chợ', address: 'Chợ Tương Mai', phone: 'Tôm, cá, hải sản mua lẻ', aliases: ['mua lẻ', 'lẻ'] }
+        ];
+
+        const DEFAULT_TEMPLATES = [
+            { id: 'tpl_1', name: 'Thịt lợn', unit: 'kg', supplierId: 'sup_thu' },
+            { id: 'tpl_2', name: 'Sườn lợn', unit: 'kg', supplierId: 'sup_thu' },
+            { id: 'tpl_3', name: 'Thịt bò', unit: 'kg', supplierId: 'sup_thu' },
+            { id: 'tpl_4', name: 'Đùi gà công nghiệp', unit: 'kg', supplierId: 'sup_hanh' },
+            { id: 'tpl_4b', name: 'Trứng', unit: 'quả', supplierId: 'sup_hanh' },
+            { id: 'tpl_5', name: 'Dưa chuột', unit: 'kg', supplierId: 'sup_tien' },
+            { id: 'tpl_6', name: 'Tỏi', unit: 'kg', supplierId: 'sup_tien' },
+            { id: 'tpl_7', name: 'Hành tây', unit: 'kg', supplierId: 'sup_tien' },
+            { id: 'tpl_8', name: 'Cà rốt', unit: 'kg', supplierId: 'sup_tien' },
+            { id: 'tpl_9', name: 'Cải ngọt', unit: 'kg', supplierId: 'sup_tham' },
+            { id: 'tpl_10', name: 'Rau ngót', unit: 'kg', supplierId: 'sup_tham' },
+            { id: 'tpl_11', name: 'Rau gia vị', unit: 'mớ', supplierId: 'sup_tham' },
+            { id: 'tpl_12', name: 'Gạo điệp', unit: 'kg', supplierId: 'sup_cuong' },
+            { id: 'tpl_13', name: 'Bột mì', unit: 'kg', supplierId: 'sup_cuong' },
+            { id: 'tpl_14', name: 'Cốt dừa', unit: 'lon', supplierId: 'sup_cuong' },
+            { id: 'tpl_15', name: 'Đường vàng', unit: 'kg', supplierId: 'sup_cuong' },
+            { id: 'tpl_16', name: 'Dầu ăn', unit: 'chai', supplierId: 'sup_cuong' },
+            { id: 'tpl_17', name: 'Hộp cơm', unit: 'túi', supplierId: 'sup_hop' },
+            { id: 'tpl_18', name: 'Thìa đũa', unit: 'bịch', supplierId: 'sup_hop' },
+            { id: 'tpl_19', name: 'Tôm', unit: 'kg', supplierId: 'sup_le' }
+        ];
+
+        function buildInitialSampleData() {
+            const today = getTodayISO();
+            const yDate = new Date(Date.now() - 86400000);
+            const yISO = yDate.toISOString().split('T')[0];
+
+            return {
+                profile: {
+                    businessName: 'CƠM LONG NINH',
+                    taxId: '0108962157-001',
+                    address: 'Tương Mai, Thanh Trì, Hà Nội',
+                    googleScriptUrl: ''
+                },
+                suppliers: JSON.parse(JSON.stringify(DEFAULT_SUPPLIERS)),
+                templates: JSON.parse(JSON.stringify(DEFAULT_TEMPLATES)),
+                entries: [
+                    { id: 'e_101', date: today, supplierId: 'sup_thu', itemName: 'Thịt lợn', unit: 'kg', qty: 6.5, totalPrice: 877500, status: 'CK' },
+                    { id: 'e_102', date: today, supplierId: 'sup_thu', itemName: 'Sườn lợn', unit: 'kg', qty: 2.5, totalPrice: 350000, status: 'CK' },
+                    { id: 'e_103', date: today, supplierId: 'sup_hanh', itemName: 'Đùi gà công nghiệp', unit: 'kg', qty: 10, totalPrice: 580000, status: 'TM' },
+                    { id: 'e_104', date: today, supplierId: 'sup_tien', itemName: 'Dưa chuột', unit: 'kg', qty: 4, totalPrice: 60000, status: 'TM' },
+                    { id: 'e_105', date: today, supplierId: 'sup_tham', itemName: 'Cải ngọt', unit: 'kg', qty: 4, totalPrice: 100000, status: 'Nợ' },
+                    { id: 'e_106', date: today, supplierId: 'sup_cuong', itemName: 'Gạo điệp', unit: 'kg', qty: 20, totalPrice: 300000, status: 'Nợ' },
+                    // Dữ liệu hôm qua để test so sánh tăng/giảm giá
+                    { id: 'e_001', date: yISO, supplierId: 'sup_thu', itemName: 'Thịt lợn', unit: 'kg', qty: 6, totalPrice: 780000, status: 'CK' },
+                    { id: 'e_002', date: yISO, supplierId: 'sup_hanh', itemName: 'Đùi gà công nghiệp', unit: 'kg', qty: 10, totalPrice: 600000, status: 'TM' }
+                ],
+                attachments: {}
+            };
+        }
+
+        let appState = loadAppState();
+        let activeDate = getTodayISO();
+        let selectedLedgerMonth = parseInt(activeDate.split('-')[1], 10);
+        let selectedLedgerYear = parseInt(activeDate.split('-')[0], 10);
+        let checklistFilterSupplier = 'ALL';
+        let parsedNoteBuffer = [];
+        let pendingPhotoTarget = null;
+        let tempSupplierItemsBuffer = [];
+
+        function loadAppState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) {
+                    const init = buildInitialSampleData();
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(init));
+                    return init;
+                }
+                return JSON.parse(raw);
+            } catch (e) {
+                return buildInitialSampleData();
+            }
+        }
+
+        function saveAppState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                showToast('Bộ nhớ trình duyệt đầy! Hãy tải file sao lưu JSON.', 'error');
+            }
+        }
+
+        // =====================================================================
+        // 2. TIỆN ÍCH ĐỊNH DẠNG & THÔNG BÁO
+        // =====================================================================
+        function formatVND(amount) {
+            return Math.round(Number(amount) || 0).toLocaleString('vi-VN') + ' đ';
+        }
+
+        function formatNum(num) {
+            return (Number(num) || 0).toLocaleString('vi-VN');
+        }
+
+        function formatDateVN(isoDate) {
+            if (!isoDate) return '';
+            const parts = isoDate.split('-');
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
+        function getSupplierById(id) {
+            return appState.suppliers.find(s => s.id === id) || { id: 'sup_le', name: 'Mua lẻ ngoài chợ', address: 'Chợ Tương Mai', aliases: [] };
+        }
+
+        function showToast(msg, type = 'success') {
+            const box = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast-item toast-${type}`;
+            el.textContent = msg;
+            box.appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transition = 'opacity 0.25s';
+                setTimeout(() => el.remove(), 260);
+            }, 2600);
+        }
+
+        function shiftActiveDate(deltaDays) {
+            const d = new Date(activeDate + 'T12:00:00');
+            d.setDate(d.getDate() + deltaDays);
+            activeDate = d.toISOString().split('T')[0];
+            document.getElementById('active-date-picker').value = activeDate;
+            selectedLedgerMonth = parseInt(activeDate.split('-')[1], 10);
+            selectedLedgerYear = parseInt(activeDate.split('-')[0], 10);
+            document.getElementById('ledger-year-select').value = selectedLedgerYear;
+            renderDailyScreen();
+            renderLedgerTable();
+            document.getElementById('note-target-date-label').textContent = formatDateVN(activeDate);
+        }
+
+        // =====================================================================
+        // 3. LOGIC TÍNH GIÁ NGƯỢC & SO SÁNH GIÁ NHẬP GẦN NHẤT
+        // =====================================================================
+        function getLastUnitPrice(itemName, excludeId = null, upToDate = null) {
+            if (!itemName) return null;
+            const norm = itemName.trim().toLowerCase();
+            const matches = appState.entries
+                .filter(e => e.id !== excludeId && e.itemName.trim().toLowerCase() === norm && e.qty > 0)
+                .filter(e => !upToDate || e.date <= upToDate)
+                .sort((a, b) => b.date.localeCompare(a.date));
+            if (matches.length === 0) return null;
+            return Math.round(matches[0].totalPrice / matches[0].qty);
+        }
+
+        function multiplyTotalBy(factor) {
+            const input = document.getElementById('item-total-input');
+            const val = parseFloat(input.value) || 0;
+            if (val > 0) {
+                input.value = Math.round(val * factor);
+                recalculateReversePrice();
+            }
+        }
+
+        function recalculateReversePrice() {
+            const itemName = document.getElementById('item-name-input').value;
+            const unit = document.getElementById('item-unit-input').value || 'kg';
+            const qty = parseFloat(document.getElementById('item-qty-input').value) || 0;
+            const total = parseFloat(document.getElementById('item-total-input').value) || 0;
+            const editId = document.getElementById('edit-entry-id').value || null;
+
+            const priceEl = document.getElementById('calc-unit-price-display');
+            const badgeEl = document.getElementById('price-comparison-badge');
+
+            if (qty <= 0 || total <= 0) {
+                priceEl.textContent = `0 đ / ${unit}`;
+                badgeEl.innerHTML = `<span style="color:#94a3b8;">Nhập SL & Tổng tiền</span>`;
+                return;
+            }
+
+            const unitPrice = Math.round(total / qty);
+            priceEl.textContent = `${formatVND(unitPrice)} / ${unit}`;
+
+            const prevPrice = getLastUnitPrice(itemName, editId, activeDate);
+            if (!prevPrice) {
+                badgeEl.innerHTML = `<span style="color:#7dd3fc;">Mặt hàng mới</span>`;
+                return;
+            }
+
+            const diff = unitPrice - prevPrice;
+            if (diff > 0) {
+                badgeEl.innerHTML = `<span style="background:rgba(244,63,94,0.25); color:#fda4af; padding:3px 7px; border-radius:6px;">▲ +${formatVND(diff)}/${unit}</span><div style="font-size:10px; color:#94a3b8; margin-top:2px;">Cũ: ${formatVND(prevPrice)}</div>`;
+            } else if (diff < 0) {
+                badgeEl.innerHTML = `<span style="background:rgba(16,185,129,0.25); color:#6ee7b7; padding:3px 7px; border-radius:6px;">▼ ${formatVND(diff)}/${unit}</span><div style="font-size:10px; color:#94a3b8; margin-top:2px;">Cũ: ${formatVND(prevPrice)}</div>`;
+            } else {
+                badgeEl.innerHTML = `<span style="color:#6ee7b7;">● Bằng giá cũ</span>`;
+            }
+        }
+
+        // =====================================================================
+        // 4. BỘ TÁCH GHI CHÚ THÔNG MINH (CHẠY HOÀN HẢO TRÊN SAFARI iOS)
+        // =====================================================================
+        function findDefaultSupplierForItem(itemName) {
+            if (!itemName) return getSupplierById('sup_le');
+            const norm = itemName.trim().toLowerCase();
+
+            // 1. Khớp chính xác trong Danh mục mẫu
+            const exact = appState.templates.find(t => t.name.trim().toLowerCase() === norm);
+            if (exact) return getSupplierById(exact.supplierId);
+
+            // 2. Khớp chứa từ khóa (VD: "đùi gà" -> khớp "đùi gà công nghiệp", "trứng gà" -> khớp "trứng")
+            const partial = appState.templates.find(t => {
+                const tn = t.name.trim().toLowerCase();
+                return norm.includes(tn) || tn.includes(norm);
+            });
+            if (partial) return getSupplierById(partial.supplierId);
+
+            // 3. Tra lịch sử nhập hàng trước đó
+            const hist = appState.entries.slice().reverse().find(e => e.itemName.trim().toLowerCase() === norm);
+            if (hist) return getSupplierById(hist.supplierId);
+
+            return getSupplierById('sup_le');
+        }
+
+        function findSupplierHitsInText(text) {
+            const lower = text.toLowerCase();
+            const patterns = [];
+            const prefixes = ['chị', 'cô', 'chú', 'anh', 'bác', 'ông', 'bà', 'sạp', 'hàng', 'đại lý', 'phố'];
+
+            appState.suppliers.forEach(sup => {
+                const fullName = sup.name.trim().toLowerCase();
+                patterns.push({ key: fullName, supplier: sup });
+
+                prefixes.forEach(p => {
+                    if (fullName.startsWith(p + ' ')) {
+                        const shortName = fullName.slice(p.length).trim();
+                        if (shortName.length >= 3) {
+                            patterns.push({ key: shortName, supplier: sup });
+                        }
+                    }
+                });
+
+                if (Array.isArray(sup.aliases)) {
+                    sup.aliases.forEach(al => {
+                        if (al && al.trim().length >= 2) {
+                            patterns.push({ key: al.trim().toLowerCase(), supplier: sup });
+                        }
+                    });
+                }
+            });
+
+            patterns.sort((a, b) => b.key.length - a.key.length);
+
+            const hits = [];
+            patterns.forEach(p => {
+                let pos = 0;
+                while (true) {
+                    const idx = lower.indexOf(p.key, pos);
+                    if (idx === -1) break;
+                    const before = idx === 0 ? ' ' : lower[idx - 1];
+                    const after = idx + p.key.length >= lower.length ? ' ' : lower[idx + p.key.length];
+                    if (/[\s,.;:\-\n\(\)]/.test(before) && /[\s,.;:\-\n\(\)]/.test(after)) {
+                        const overlap = hits.some(h => !(idx + p.key.length <= h.start || idx >= h.end));
+                        if (!overlap) {
+                            hits.push({ start: idx, end: idx + p.key.length, supplier: p.supplier });
+                        }
+                    }
+                    pos = idx + p.key.length;
+                }
+            });
+
+            return hits.sort((a, b) => a.start - b.start);
+        }
+
+        function parseMoneyString(raw) {
+            const s = raw.toLowerCase().trim();
+            if (s.endsWith('tr')) {
+                return Math.round(parseFloat(s.replace('tr', '').replace(',', '.')) * 1000000);
+            }
+            if (s.endsWith('k')) {
+                return Math.round(parseFloat(s.replace('k', '').replace(',', '.')) * 1000);
+            }
+            return parseInt(s.replace(/[.,\s]/g, ''), 10) || 0;
+        }
+
+        function extractItemsFromChunk(chunkText, explicitSupplier) {
+            const items = [];
+            const cleanChunk = chunkText.replace(/[\r\n;]+/g, ' ');
+            // Tương thích 100% Safari iOS (không dùng lookbehind)
+            const unitList = '(kg|ký|cân|lạng|g|gr|gam|bó|mớ|quả|trái|chai|lít|lit|túi|gói|hộp|thùng|lon|cái|con|miếng|vỉ|chục|bịch)';
+            const regex = new RegExp(
+                `([a-zA-ZÀ-ỹ][a-zA-ZÀ-ỹ0-9\\s\\/\\(\\)-]*?)\\s+(\\d+(?:[.,]\\d+)?)\\s*${unitList}?\\s*[:\\-]?\\s*(\\d+(?:[.,]\\d+)?\\s*(?:tr|k)|\\d{1,3}(?:[.,]\\d{3})+|\\d{4,9})(?=$|\\s|[,.;])`,
+                'gi'
+            );
+
+            let m;
+            while ((m = regex.exec(cleanChunk)) !== null) {
+                let rawName = m[1].replace(/^[,.;:\-\s]+|[,.;:\-\s]+$/g, '').trim();
+                const qty = parseFloat(m[2].replace(',', '.'));
+                let unit = (m[3] || '').toLowerCase();
+                if (unit === 'ký' || unit === 'cân') unit = 'kg';
+                const totalPrice = parseMoneyString(m[4]);
+
+                if (rawName) {
+                    rawName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+                }
+
+                const supplier = explicitSupplier || findDefaultSupplierForItem(rawName);
+                if (!unit) {
+                    const tpl = appState.templates.find(t => t.name.trim().toLowerCase() === rawName.toLowerCase());
+                    unit = tpl ? tpl.unit : 'kg';
+                }
+
+                if (rawName && qty > 0 && totalPrice > 0) {
+                    items.push({
+                        supplierId: supplier.id,
+                        itemName: rawName,
+                        qty: qty,
+                        unit: unit,
+                        totalPrice: totalPrice
+                    });
+                }
+            }
+            return items;
+        }
+
+        function parseFullNoteText(text) {
+            if (!text || !text.trim()) return [];
+            const hits = findSupplierHitsInText(text);
+            const results = [];
+
+            if (hits.length === 0) {
+                return extractItemsFromChunk(text, null);
+            }
+
+            if (hits[0].start > 0) {
+                results.push(...extractItemsFromChunk(text.slice(0, hits[0].start), null));
+            }
+
+            for (let i = 0; i < hits.length; i++) {
+                const cur = hits[i];
+                const endPos = i + 1 < hits.length ? hits[i + 1].start : text.length;
+                results.push(...extractItemsFromChunk(text.slice(cur.end, endPos), cur.supplier));
+            }
+            return results;
+        }
+
+        function runSmartNoteParser(isButtonClick = false) {
+            const text = document.getElementById('smart-note-input').value;
+            parsedNoteBuffer = parseFullNoteText(text);
+            document.getElementById('note-target-date-label').textContent = formatDateVN(activeDate);
+
+            const wrapper = document.getElementById('note-preview-wrapper');
+            if (parsedNoteBuffer.length === 0) {
+                wrapper.classList.add('hidden');
+                if (isButtonClick) {
+                    showToast('Chưa tách được mặt hàng nào. Hãy nhập theo dạng: Tên hàng + Số lượng + Tiền (VD: Cải ngọt 2 kg 40.000)', 'error');
+                }
+                return;
+            }
+
+            renderNotePreviewList();
+            if (isButtonClick) {
+                showToast(`Đã phân tích được ${parsedNoteBuffer.length} mặt hàng!`);
+            }
+        }
+
+        function renderNotePreviewList() {
+            const wrapper = document.getElementById('note-preview-wrapper');
+            const listEl = document.getElementById('note-preview-list');
+            const countEl = document.getElementById('note-parsed-count');
+            const totalEl = document.getElementById('note-parsed-total');
+
+            if (parsedNoteBuffer.length === 0) {
+                wrapper.classList.add('hidden');
+                return;
+            }
+
+            wrapper.classList.remove('hidden');
+            countEl.textContent = parsedNoteBuffer.length;
+            const totalSum = parsedNoteBuffer.reduce((s, it) => s + (Number(it.totalPrice) || 0), 0);
+            totalEl.textContent = formatVND(totalSum);
+
+            listEl.innerHTML = parsedNoteBuffer.map((item, idx) => {
+                const unitPrice = item.qty > 0 ? Math.round(item.totalPrice / item.qty) : 0;
+                const supOptions = appState.suppliers.map(s =>
+                    `<option value="${s.id}" ${s.id === item.supplierId ? 'selected' : ''}>${s.name}</option>`
+                ).join('');
+
+                return `
+                    <div style="background: var(--slate-50); border: 1.5px solid var(--slate-200); border-radius: 14px; padding: 10px;">
+                        <div class="flex items-center justify-between gap-2" style="margin-bottom: 8px;">
+                            <select onchange="updateParsedNoteRow(${idx}, 'supplierId', this.value)" class="form-select" style="width: auto; max-width: 72%; padding: 5px 8px; font-size: 12px; background: var(--primary-soft); color: var(--primary-dark); border-color: #a7f3d0;">
+                                ${supOptions}
+                            </select>
+                            <button type="button" onclick="removeParsedNoteRow(${idx})" class="btn btn-soft-rose btn-sm">Xóa</button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1.4fr 1fr 1.2fr; gap: 6px; margin-bottom: 6px;">
+                            <input type="text" value="${item.itemName}" onchange="updateParsedNoteRow(${idx}, 'itemName', this.value)" class="form-input" style="padding: 7px 8px; font-size: 13px;">
+                            <div class="flex items-center" style="border: 1.5px solid var(--slate-300); border-radius: 10px; background: #fff; padding: 0 6px;">
+                                <input type="number" step="0.01" value="${item.qty}" onchange="updateParsedNoteRow(${idx}, 'qty', this.value)" style="width: 100%; border: none; outline: none; font-size: 13px; font-weight: 700;">
+                                <span style="font-size: 11px; color: var(--slate-500);">${item.unit}</span>
+                            </div>
+                            <input type="number" value="${item.totalPrice}" onchange="updateParsedNoteRow(${idx}, 'totalPrice', this.value)" class="form-input text-right" style="padding: 7px 8px; font-size: 13px; color: var(--primary);">
+                        </div>
+                        <div style="font-size: 11px; color: var(--slate-500);">
+                            Đơn giá tự tính: <strong style="color: var(--slate-900);">${formatVND(unitPrice)}/${item.unit}</strong>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateParsedNoteRow(idx, field, val) {
+            const row = parsedNoteBuffer[idx];
+            if (!row) return;
+            if (field === 'supplierId') row.supplierId = val;
+            else if (field === 'itemName') row.itemName = val.trim() || row.itemName;
+            else if (field === 'qty') {
+                const n = parseFloat(val);
+                if (n > 0) row.qty = n;
+            } else if (field === 'totalPrice') {
+                const p = parseInt(val, 10);
+                if (p > 0) row.totalPrice = p;
+            }
+            renderNotePreviewList();
+        }
+
+        function removeParsedNoteRow(idx) {
+            parsedNoteBuffer.splice(idx, 1);
+            renderNotePreviewList();
+        }
+
+        function commitParsedNoteItems() {
+            if (parsedNoteBuffer.length === 0) return;
+            const status = document.getElementById('note-default-status').value;
+
+            parsedNoteBuffer.forEach((it, idx) => {
+                appState.entries.push({
+                    id: 'e_' + Date.now() + '_' + idx,
+                    date: activeDate,
+                    supplierId: it.supplierId,
+                    itemName: it.itemName,
+                    unit: it.unit,
+                    qty: Number(it.qty),
+                    totalPrice: Math.round(Number(it.totalPrice)),
+                    status: status
+                });
+            });
+
+            saveAppState();
+            showToast(`Đã lưu ${parsedNoteBuffer.length} mặt hàng vào ngày ${formatDateVN(activeDate)}!`);
+            document.getElementById('smart-note-input').value = '';
+            parsedNoteBuffer = [];
+            document.getElementById('note-preview-wrapper').classList.add('hidden');
+            switchTab('daily');
+        }
+
+        function fillSampleNote() {
+            const sample = 'Cải ngọt 2 kg 40.000 hành tây 1 kg 15.000 dưa chuột 2 kg 40.000 thịt lợn 1 kg 150.000 trứng 20 quả 40.000 tôm 1 kg 150.000 gạo điệp 10 kg 150.000';
+            document.getElementById('smart-note-input').value = sample;
+            runSmartNoteParser(false);
+        }
+
+        function clearSmartNote() {
+            document.getElementById('smart-note-input').value = '';
+            parsedNoteBuffer = [];
+            document.getElementById('note-preview-wrapper').classList.add('hidden');
+        }
+
+        // =====================================================================
+        // 5. RENDER TAB ĐI CHỢ HÀNG NGÀY & CHECKLIST MẪU
+        // =====================================================================
+        function renderQuickChecklist() {
+            const filterBar = document.getElementById('checklist-supplier-filter');
+            const gridEl = document.getElementById('quick-checklist-grid');
+            const keyword = (document.getElementById('checklist-search-input')?.value || '').trim().toLowerCase();
+
+            const usedSupplierIds = [...new Set(appState.templates.map(t => t.supplierId))];
+            let chipsHtml = `<button type="button" onclick="setChecklistFilter('ALL')" class="filter-chip ${checklistFilterSupplier === 'ALL' ? 'active' : ''}">Tất cả (${appState.templates.length})</button>`;
+            usedSupplierIds.forEach(sid => {
+                const sup = getSupplierById(sid);
+                chipsHtml += `<button type="button" onclick="setChecklistFilter('${sid}')" class="filter-chip ${checklistFilterSupplier === sid ? 'active' : ''}">${sup.name}</button>`;
+            });
+            filterBar.innerHTML = chipsHtml;
+
+            const filtered = appState.templates.filter(t => {
+                const matchSup = checklistFilterSupplier === 'ALL' || t.supplierId === checklistFilterSupplier;
+                const matchKey = !keyword || t.name.toLowerCase().includes(keyword);
+                return matchSup && matchKey;
+            });
+
+            if (filtered.length === 0) {
+                gridEl.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 14px; font-size:12px; color:var(--slate-400);">Không có nguyên liệu mẫu phù hợp.</div>`;
+                return;
+            }
+
+            gridEl.innerHTML = filtered.map(tpl => {
+                const sup = getSupplierById(tpl.supplierId);
+                return `
+                    <button type="button" onclick="openQuickAddModal('${tpl.supplierId}', '${tpl.name.replace(/'/g, "\\'")}', '${tpl.unit}')" class="tpl-chip-btn">
+                        <span class="font-extrabold truncate" style="font-size: 13px; color: var(--slate-900);">${tpl.name}</span>
+                        <span class="truncate" style="font-size: 11px; color: var(--slate-500);">${sup.name} • ${tpl.unit}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setChecklistFilter(supId) {
+            checklistFilterSupplier = supId;
+            renderQuickChecklist();
+        }
+
+        function renderDailyScreen() {
+            const dayEntries = appState.entries.filter(e => e.date === activeDate);
+            let totalDay = 0, paidDay = 0, debtDay = 0;
+
+            dayEntries.forEach(e => {
+                totalDay += e.totalPrice;
+                if (e.status === 'Nợ') debtDay += e.totalPrice;
+                else paidDay += e.totalPrice;
+            });
+
+            document.getElementById('daily-total-amount').textContent = formatVND(totalDay);
+            document.getElementById('daily-paid-amount').textContent = formatVND(paidDay);
+            document.getElementById('daily-debt-amount').textContent = formatVND(debtDay);
+
+            const groupsMap = {};
+            dayEntries.forEach(entry => {
+                if (!groupsMap[entry.supplierId]) groupsMap[entry.supplierId] = [];
+                groupsMap[entry.supplierId].push(entry);
+            });
+
+            const supplierIds = Object.keys(groupsMap);
+            document.getElementById('daily-supplier-count').textContent = supplierIds.length;
+            const listContainer = document.getElementById('daily-grouped-list');
+
+            if (supplierIds.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="card text-center" style="padding: 28px 16px;">
+                        <div style="font-size: 32px; margin-bottom: 6px;">🛒</div>
+                        <div class="font-bold" style="color: var(--slate-600);">Chưa có phiếu đi chợ ngày ${formatDateVN(activeDate)}</div>
+                        <div style="font-size: 12px; color: var(--slate-400); margin-top: 4px;">Chọn nguyên liệu mẫu phía trên hoặc bấm "Nhập món mới" / "Dán ghi chú"</div>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = supplierIds.map(supId => {
+                const sup = getSupplierById(supId);
+                const items = groupsMap[supId];
+                const supTotal = items.reduce((s, it) => s + it.totalPrice, 0);
+                const attKey = `${activeDate}_${supId}`;
+                const att = appState.attachments[attKey] || {};
+
+                // Xác định trạng thái chung của nhóm mối hàng
+                const allDebt = items.every(i => i.status === 'Nợ');
+                const allCK = items.every(i => i.status === 'CK');
+                const groupStatus = allDebt ? 'Nợ' : (allCK ? 'CK' : 'TM');
+
+                const rowsHtml = items.map(it => {
+                    const uPrice = Math.round(it.totalPrice / it.qty);
+                    const prevPrice = getLastUnitPrice(it.itemName, it.id, activeDate);
+                    let diffHtml = '';
+                    if (prevPrice) {
+                        const diff = uPrice - prevPrice;
+                        if (diff > 0) diffHtml = `<span class="price-badge-up">▲ +${formatNum(diff)}đ</span>`;
+                        else if (diff < 0) diffHtml = `<span class="price-badge-down">▼ ${formatNum(diff)}đ</span>`;
+                    }
+
+                    return `
+                        <div class="item-row">
+                            <div style="min-width: 0; flex: 1;">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <strong style="font-size: 14px; color: var(--slate-900);">${it.itemName}</strong>
+                                    ${diffHtml}
+                                </div>
+                                <div style="font-size: 12px; color: var(--slate-500); margin-top: 2px;">
+                                    ${formatNum(it.qty)} ${it.unit} × ${formatVND(uPrice)}/${it.unit}
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <div class="text-right">
+                                    <div class="font-extrabold" style="font-size: 14px;">${formatVND(it.totalPrice)}</div>
+                                    <div style="font-size: 11px; font-weight: 700; color: ${it.status === 'Nợ' ? 'var(--rose)' : 'var(--primary)'};">${it.status}</div>
+                                </div>
+                                <button type="button" onclick="openEditEntryModal('${it.id}')" class="btn btn-soft-sky btn-sm" title="Sửa">✎</button>
+                                <button type="button" onclick="deleteEntry('${it.id}')" class="btn btn-soft-rose btn-sm" title="Xóa">✕</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="supplier-group-card">
+                        <div class="supplier-group-header">
+                            <div style="min-width: 0;">
+                                <div class="font-extrabold truncate" style="font-size: 15px; color: var(--slate-900);">${sup.name}</div>
+                                <div class="truncate" style="font-size: 11px; color: var(--slate-500);">${sup.address || 'Mối quen'}</div>
+                            </div>
+                            <button type="button" onclick="openQuickAddModal('${supId}')" class="btn btn-soft-green btn-sm shrink-0">+ Thêm món</button>
+                        </div>
+
+                        <div>${rowsHtml}</div>
+
+                        <div style="background: var(--slate-50); padding: 12px 14px; border-top: 1px solid var(--slate-200);">
+                            <div class="flex items-center justify-between" style="margin-bottom: 10px;">
+                                <span style="font-size: 12px; font-weight: 700; color: var(--slate-600);">Tổng mối ${sup.name}:</span>
+                                <strong style="font-size: 17px; color: var(--primary);">${formatVND(supTotal)}</strong>
+                            </div>
+
+                            <!-- Nút gạt trạng thái thanh toán cả mối trong ngày -->
+                            <div class="status-toggle-group" style="margin-bottom: 10px;">
+                                <button type="button" onclick="setSupplierGroupStatus('${supId}', 'TM')" class="status-pill-btn ${groupStatus === 'TM' ? 'active-tm' : ''}">Tiền mặt (TM)</button>
+                                <button type="button" onclick="setSupplierGroupStatus('${supId}', 'CK')" class="status-pill-btn ${groupStatus === 'CK' ? 'active-ck' : ''}">Chuyển khoản</button>
+                                <button type="button" onclick="setSupplierGroupStatus('${supId}', 'Nợ')" class="status-pill-btn ${groupStatus === 'Nợ' ? 'active-no' : ''}">Ghi nợ</button>
+                            </div>
+
+                            <!-- Nút chụp / xem ảnh Hóa đơn giấy & Giao dịch ngân hàng -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                ${att.invoice ? `
+                                    <button type="button" onclick="openImageViewer('${attKey}', 'invoice')" class="btn btn-soft-green btn-sm">🖼️ Xem Hóa đơn giấy</button>
+                                ` : `
+                                    <button type="button" onclick="triggerPhotoCapture('${activeDate}', '${supId}', 'invoice')" class="btn btn-soft-slate btn-sm">📷 Chụp Hóa đơn</button>
+                                `}
+                                ${att.transfer ? `
+                                    <button type="button" onclick="openImageViewer('${attKey}', 'transfer')" class="btn btn-soft-sky btn-sm">🧾 Xem Bill CK</button>
+                                ` : `
+                                    <button type="button" onclick="triggerPhotoCapture('${activeDate}', '${supId}', 'transfer')" class="btn btn-soft-slate btn-sm">🏦 Ảnh Chuyển khoản</button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function setSupplierGroupStatus(supplierId, newStatus) {
+            appState.entries.forEach(e => {
+                if (e.date === activeDate && e.supplierId === supplierId) {
+                    e.status = newStatus;
+                }
+            });
+            saveAppState();
+            renderDailyScreen();
+            updateDebtBadge();
+            showToast(`Đã chuyển trạng thái sang: ${newStatus === 'Nợ' ? 'Ghi nợ' : newStatus}`);
+        }
+
+        // =====================================================================
+        // 6. TAB SỔ BẢNG KÊ 01/TNDN - 12 THÁNG & XUẤT EXCEL (.CSV)
+        // =====================================================================
+        function renderTwelveMonthsBar() {
+            const bar = document.getElementById('twelve-months-bar');
+            let html = '';
+            for (let m = 1; m <= 12; m++) {
+                const label = m < 10 ? `Tháng 0${m}` : `Tháng ${m}`;
+                html += `<button type="button" onclick="selectLedgerMonth(${m})" class="month-tab-btn ${selectedLedgerMonth === m ? 'active' : ''}">${label}</button>`;
+            }
+            bar.innerHTML = html;
+        }
+
+        function selectLedgerMonth(m) {
+            selectedLedgerMonth = m;
+            renderTwelveMonthsBar();
+            renderLedgerTable();
+        }
+
+        function changeLedgerYear(y) {
+            selectedLedgerYear = parseInt(y, 10);
+            renderLedgerTable();
+        }
+
+        function renderLedgerTable() {
+            const mmStr = selectedLedgerMonth < 10 ? `0${selectedLedgerMonth}` : `${selectedLedgerMonth}`;
+            const prefix = `${selectedLedgerYear}-${mmStr}`;
+
+            document.getElementById('doc-business-name').textContent = appState.profile.businessName;
+            document.getElementById('doc-tax-id').textContent = appState.profile.taxId || '';
+            document.getElementById('doc-address').textContent = appState.profile.address || '';
+            document.getElementById('doc-title-month').textContent = mmStr;
+            document.getElementById('doc-title-year').textContent = selectedLedgerYear;
+            document.getElementById('export-month-num').textContent = mmStr;
+            document.querySelectorAll('.ledger-month-label').forEach(el => el.textContent = mmStr);
+
+            const monthEntries = appState.entries
+                .filter(e => e.date && e.date.startsWith(prefix))
+                .sort((a, b) => a.date.localeCompare(b.date));
+
+            let sumTotal = 0, sumDebt = 0;
+            monthEntries.forEach(e => {
+                sumTotal += e.totalPrice;
+                if (e.status === 'Nợ') sumDebt += e.totalPrice;
+            });
+
+            document.getElementById('ledger-month-total').textContent = formatVND(sumTotal);
+            document.getElementById('ledger-month-count').textContent = monthEntries.length;
+            document.getElementById('ledger-month-debt').textContent = formatVND(sumDebt);
+            document.getElementById('ledger-footer-total').textContent = formatVND(sumTotal);
+
+            const tbody = document.getElementById('ledger-table-body');
+            if (monthEntries.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding: 24px; color: var(--slate-400);">Chưa có dữ liệu thu mua trong Tháng ${mmStr}/${selectedLedgerYear}</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = monthEntries.map((e, idx) => {
+                const sup = getSupplierById(e.supplierId);
+                const supFull = sup.address ? `${sup.name} - ${sup.address}` : sup.name;
+                const uPrice = Math.round(e.totalPrice / e.qty);
+                const attKey = `${e.date}_${e.supplierId}`;
+                const att = appState.attachments[attKey] || {};
+
+                let imgCell = '';
+                if (att.invoice) {
+                    imgCell += `<button type="button" onclick="openImageViewer('${attKey}', 'invoice')" style="color: var(--primary); font-weight:700; background:none; border:none; text-decoration:underline; cursor:pointer; display:block;">${att.invoice.fileName}</button>`;
+                }
+                if (att.transfer) {
+                    imgCell += `<button type="button" onclick="openImageViewer('${attKey}', 'transfer')" style="color: var(--sky); font-weight:700; background:none; border:none; text-decoration:underline; cursor:pointer; display:block;">${att.transfer.fileName}</button>`;
+                }
+
+                return `
+                    <tr>
+                        <td class="text-center">${idx + 1}</td>
+                        <td class="text-center">${formatDateVN(e.date)}</td>
+                        <td>${supFull}</td>
+                        <td class="font-bold">${e.itemName}</td>
+                        <td class="text-center">${e.unit}</td>
+                        <td class="text-right">${formatNum(e.qty)}</td>
+                        <td class="text-right">${formatNum(uPrice)}</td>
+                        <td class="text-right font-bold">${formatNum(e.totalPrice)}</td>
+                        <td class="text-center font-bold" style="color: ${e.status === 'Nợ' ? 'var(--rose)' : 'var(--slate-800)'};">${e.status}</td>
+                        <td>${imgCell || '<span style="color:#cbd5e1;">—</span>'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function exportMonthToCSV(allYear = false) {
+            const mmStr = selectedLedgerMonth < 10 ? `0${selectedLedgerMonth}` : `${selectedLedgerMonth}`;
+            const prefix = allYear ? `${selectedLedgerYear}-` : `${selectedLedgerYear}-${mmStr}`;
+
+            const rowsData = appState.entries
+                .filter(e => e.date && e.date.startsWith(prefix))
+                .sort((a, b) => a.date.localeCompare(b.date));
+
+            if (rowsData.length === 0) {
+                showToast('Không có dữ liệu để xuất file Excel!', 'error');
+                return;
+            }
+
+            const headers = ['STT', 'Ngày', 'Nhà cung cấp', 'Tên hàng', 'Số lượng', 'ĐVT', 'Tổng tiền (VNĐ)', 'Đơn giá tự tính (VNĐ)', 'Trạng thái thanh toán', 'Chứng từ ảnh'];
+            const csvLines = [headers.join(',')];
+
+            rowsData.forEach((e, idx) => {
+                const sup = getSupplierById(e.supplierId);
+                const supFull = (sup.address ? `${sup.name} - ${sup.address}` : sup.name).replace(/"/g, '""');
+                const uPrice = Math.round(e.totalPrice / e.qty);
+                const attKey = `${e.date}_${e.supplierId}`;
+                const att = appState.attachments[attKey] || {};
+                const imgNote = [att.invoice?.fileName, att.transfer?.fileName].filter(Boolean).join(' | ');
+
+                csvLines.push([
+                    idx + 1,
+                    formatDateVN(e.date),
+                    `"${supFull}"`,
+                    `"${e.itemName.replace(/"/g, '""')}"`,
+                    e.qty,
+                    `"${e.unit}"`,
+                    e.totalPrice,
+                    uPrice,
+                    `"${e.status}"`,
+                    `"${imgNote}"`
+                ].join(','));
+            });
+
+            const bom = '\uFEFF';
+            const blob = new Blob([bom + csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = allYear
+                ? `BangKe_01TNDN_CaNam_${selectedLedgerYear}.csv`
+                : `BangKe_01TNDN_Thang${mmStr}_${selectedLedgerYear}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Đã xuất file Excel (.csv) thành công!');
+        }
+
+        // =====================================================================
+        // 7. TAB CÔNG NỢ & QUẢN LÝ CHỈNH SỬA MỐI HÀNG TOÀN DIỆN
+        // =====================================================================
+        function renderDebtTab() {
+            let totalAllDebt = 0;
+            appState.entries.forEach(e => {
+                if (e.status === 'Nợ') totalAllDebt += e.totalPrice;
+            });
+            document.getElementById('total-all-debt').textContent = formatVND(totalAllDebt);
+
+            const keyword = (document.getElementById('supplier-search-input')?.value || '').trim().toLowerCase();
+            const listEl = document.getElementById('suppliers-debt-list');
+
+            const filtered = appState.suppliers.filter(sup => {
+                if (!keyword) return true;
+                const itemsText = appState.templates.filter(t => t.supplierId === sup.id).map(t => t.name.toLowerCase()).join(' ');
+                return sup.name.toLowerCase().includes(keyword)
+                    || (sup.address || '').toLowerCase().includes(keyword)
+                    || (sup.phone || '').toLowerCase().includes(keyword)
+                    || itemsText.includes(keyword);
+            });
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `<div class="card text-center" style="color: var(--slate-400); padding: 24px;">Không tìm thấy mối hàng nào.</div>`;
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(sup => {
+                const debtEntries = appState.entries.filter(e => e.supplierId === sup.id && e.status === 'Nợ');
+                const debtSum = debtEntries.reduce((s, e) => s + e.totalPrice, 0);
+                const allTimeSum = appState.entries.filter(e => e.supplierId === sup.id).reduce((s, e) => s + e.totalPrice, 0);
+
+                const supTemplates = appState.templates.filter(t => t.supplierId === sup.id);
+                const tagsHtml = supTemplates.length > 0
+                    ? `<div class="flex flex-wrap gap-1" style="margin-top: 8px;">${supTemplates.map(t => `<span style="background: var(--slate-100); color: var(--slate-700); font-size: 11px; font-weight: 700; padding: 3px 7px; border-radius: 6px;">${t.name} (${t.unit})</span>`).join('')}</div>`
+                    : '';
+
+                return `
+                    <div class="card" style="border-color: ${debtSum > 0 ? '#fda4af' : 'var(--slate-200)'};">
+                        <div class="flex items-start justify-between gap-2" style="margin-bottom: 10px;">
+                            <div style="min-width: 0; flex: 1;">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="font-extrabold" style="font-size: 16px; color: var(--slate-900);">${sup.name}</span>
+                                    <button type="button" onclick="openSupplierModal('${sup.id}')" class="btn btn-soft-sky btn-sm">✎ Sửa mối</button>
+                                    ${sup.id !== 'sup_le' ? `<button type="button" onclick="deleteSupplier('${sup.id}')" class="btn btn-soft-slate btn-sm" title="Xóa mối hàng">✕</button>` : ''}
+                                </div>
+                                <div style="font-size: 12px; color: var(--slate-500); margin-top: 3px;">
+                                    📍 ${sup.address || 'Chưa cập nhật địa chỉ'} ${sup.phone ? `• ${sup.phone}` : ''}
+                                </div>
+                                ${tagsHtml}
+                                <div style="font-size: 11px; color: var(--slate-400); margin-top: 6px;">Tổng giao dịch lũy kế: <strong>${formatVND(allTimeSum)}</strong></div>
+                            </div>
+
+                            <div class="text-right shrink-0">
+                                <div style="font-size: 10px; font-weight: 800; color: var(--slate-400);">ĐANG NỢ</div>
+                                <div class="font-extrabold" style="font-size: 17px; color: ${debtSum > 0 ? 'var(--rose)' : 'var(--primary)'};">${formatVND(debtSum)}</div>
+                            </div>
+                        </div>
+
+                        ${debtSum > 0 ? `
+                            <div style="background: var(--rose-light); border-radius: 12px; padding: 10px; font-size: 12px; color: #881337; margin-bottom: 10px;">
+                                <div class="font-bold" style="margin-bottom: 4px;">Chi tiết ${debtEntries.length} khoản chưa trả:</div>
+                                ${debtEntries.slice(0, 4).map(d => `<div class="flex justify-between"><span>• ${formatDateVN(d.date)}: ${d.itemName} (${formatNum(d.qty)} ${d.unit})</span><strong>${formatVND(d.totalPrice)}</strong></div>`).join('')}
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <button type="button" onclick="settleSupplierDebt('${sup.id}', 'CK')" class="btn btn-sky btn-md">Thanh toán nợ (CK)</button>
+                                <button type="button" onclick="settleSupplierDebt('${sup.id}', 'TM')" class="btn btn-primary btn-md">Trả tiền mặt</button>
+                            </div>
+                        ` : `
+                            <div style="background: var(--primary-soft); color: var(--primary-dark); font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 10px;">
+                                ✓ Không có công nợ tồn đọng
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+
+            updateDebtBadge();
+        }
+
+        function settleSupplierDebt(supplierId, method) {
+            const sup = getSupplierById(supplierId);
+            let paid = 0;
+            appState.entries.forEach(e => {
+                if (e.supplierId === supplierId && e.status === 'Nợ') {
+                    paid += e.totalPrice;
+                    e.status = method;
+                }
+            });
+            saveAppState();
+            renderDebtTab();
+            renderDailyScreen();
+            showToast(`Đã thanh toán ${formatVND(paid)} nợ cho ${sup.name} (${method})!`);
+        }
+
+        function updateDebtBadge() {
+            const hasDebt = appState.entries.some(e => e.status === 'Nợ');
+            const dot = document.getElementById('nav-debt-badge');
+            if (hasDebt) dot.classList.remove('hidden');
+            else dot.classList.add('hidden');
+        }
+
+        // =====================================================================
+        // 8. CHỤP / TẢI ẢNH HÓA ĐƠN & CHUYỂN KHOẢN
+        // =====================================================================
+        function triggerPhotoCapture(date, supplierId, type) {
+            pendingPhotoTarget = { date, supplierId, type };
+            const input = document.getElementById('hidden-photo-input');
+            input.value = '';
+            input.click();
+        }
+
+        function handlePhotoSelected(event) {
+            const file = event.target.files[0];
+            if (!file || !pendingPhotoTarget) return;
+
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const MAX_W = 900;
+                    const scale = img.width > MAX_W ? MAX_W / img.width : 1;
+                    canvas.width = Math.round(img.width * scale);
+                    canvas.height = Math.round(img.height * scale);
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.72);
+
+                    const { date, supplierId, type } = pendingPhotoTarget;
+                    const mm = date.split('-')[1];
+                    const code = Math.floor(10000 + Math.random() * 90000);
+                    const prefix = type === 'invoice' ? 'ANH_HOA_DON' : 'ANH_CHUYEN_KHOAN';
+                    const fileName = `Thang${mm}_images/${prefix}.${code}.jpg`;
+
+                    const attKey = `${date}_${supplierId}`;
+                    if (!appState.attachments[attKey]) appState.attachments[attKey] = {};
+                    appState.attachments[attKey][type] = { dataUrl, fileName };
+
+                    saveAppState();
+                    renderDailyScreen();
+                    renderLedgerTable();
+                    showToast(`Đã lưu ${type === 'invoice' ? 'Ảnh Hóa đơn' : 'Ảnh Chuyển khoản'}!`);
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openImageViewer(attKey, type) {
+            const att = appState.attachments[attKey]?.[type];
+            if (!att) return;
+            document.getElementById('viewer-title').textContent = type === 'invoice' ? 'Ảnh Hóa Đơn Giấy' : 'Ảnh Giao Dịch Ngân Hàng (CK)';
+            document.getElementById('viewer-filename').textContent = att.fileName;
+            document.getElementById('viewer-img-tag').src = att.dataUrl;
+            const dl = document.getElementById('viewer-download-btn');
+            dl.href = att.dataUrl;
+            dl.download = att.fileName.split('/').pop();
+
+            document.getElementById('viewer-delete-btn').onclick = () => {
+                delete appState.attachments[attKey][type];
+                saveAppState();
+                closeModal('modal-image-viewer');
+                renderDailyScreen();
+                renderLedgerTable();
+                showToast('Đã xóa ảnh chứng từ');
+            };
+
+            document.getElementById('modal-image-viewer').classList.remove('hidden');
+        }
+
+        // =====================================================================
+        // 9. MODALS THÊM / SỬA MÓN, MỐI HÀNG & CHECKLIST
+        // =====================================================================
+        function populateSupplierDropdowns() {
+            const html = appState.suppliers.map(s => `<option value="${s.id}">${s.name} ${s.address ? '(' + s.address + ')' : ''}</option>`).join('');
+            document.getElementById('item-supplier-select').innerHTML = html;
+            document.getElementById('tpl-item-sup').innerHTML = html;
+        }
+
+        function openQuickAddModal(supId = null, itemName = '', unit = 'kg') {
+            populateSupplierDropdowns();
+            document.getElementById('modal-item-title').textContent = 'Nhập mặt hàng đi chợ';
+            document.getElementById('edit-entry-id').value = '';
+            if (supId) document.getElementById('item-supplier-select').value = supId;
+            document.getElementById('item-name-input').value = itemName;
+            document.getElementById('item-unit-input').value = unit;
+            document.getElementById('item-qty-input').value = '';
+            document.getElementById('item-total-input').value = '';
+            document.querySelector('input[name="item-pay-status"][value="TM"]').checked = true;
+
+            recalculateReversePrice();
+            document.getElementById('modal-quick-add').classList.remove('hidden');
+            setTimeout(() => {
+                if (itemName) document.getElementById('item-qty-input').focus();
+                else document.getElementById('item-name-input').focus();
+            }, 100);
+        }
+
+        function openEditEntryModal(entryId) {
+            const entry = appState.entries.find(e => e.id === entryId);
+            if (!entry) return;
+            populateSupplierDropdowns();
+            document.getElementById('modal-item-title').textContent = 'Sửa mặt hàng đã nhập';
+            document.getElementById('edit-entry-id').value = entry.id;
+            document.getElementById('item-supplier-select').value = entry.supplierId;
+            document.getElementById('item-name-input').value = entry.itemName;
+            document.getElementById('item-unit-input').value = entry.unit;
+            document.getElementById('item-qty-input').value = entry.qty;
+            document.getElementById('item-total-input').value = entry.totalPrice;
+            const r = document.querySelector(`input[name="item-pay-status"][value="${entry.status}"]`);
+            if (r) r.checked = true;
+
+            recalculateReversePrice();
+            document.getElementById('modal-quick-add').classList.remove('hidden');
+        }
+
+        function saveEntryFromModal() {
+            const editId = document.getElementById('edit-entry-id').value;
+            const supplierId = document.getElementById('item-supplier-select').value;
+            const itemName = document.getElementById('item-name-input').value.trim();
+            const unit = document.getElementById('item-unit-input').value.trim() || 'kg';
+            const qty = parseFloat(document.getElementById('item-qty-input').value);
+            const totalPrice = parseFloat(document.getElementById('item-total-input').value);
+            const status = document.querySelector('input[name="item-pay-status"]:checked')?.value || 'TM';
+
+            if (!itemName) { showToast('Vui lòng nhập Tên mặt hàng!', 'error'); return; }
+            if (!qty || qty <= 0 || !totalPrice || totalPrice <= 0) { showToast('Vui lòng nhập Số lượng và Tổng tiền!', 'error'); return; }
+
+            if (editId) {
+                const target = appState.entries.find(e => e.id === editId);
+                if (target) {
+                    target.supplierId = supplierId;
+                    target.itemName = itemName;
+                    target.unit = unit;
+                    target.qty = qty;
+                    target.totalPrice = Math.round(totalPrice);
+                    target.status = status;
+                }
+                showToast('Đã cập nhật mặt hàng!');
+            } else {
+                appState.entries.push({
+                    id: 'e_' + Date.now(),
+                    date: activeDate,
+                    supplierId,
+                    itemName,
+                    unit,
+                    qty,
+                    totalPrice: Math.round(totalPrice),
+                    status
+                });
+                showToast(`Đã thêm ${itemName} (${formatVND(totalPrice)})`);
+            }
+
+            saveAppState();
+            closeModal('modal-quick-add');
+            renderDailyScreen();
+            updateDebtBadge();
+        }
+
+        function deleteEntry(entryId) {
+            appState.entries = appState.entries.filter(e => e.id !== entryId);
+            saveAppState();
+            renderDailyScreen();
+            updateDebtBadge();
+            showToast('Đã xóa dòng mặt hàng');
+        }
+
+        // Modal Thêm / Chỉnh sửa Mối hàng
+        function openSupplierModal(supplierId = null) {
+            const editIdEl = document.getElementById('edit-supplier-id');
+            const titleEl = document.getElementById('modal-supplier-title');
+
+            if (supplierId) {
+                const sup = getSupplierById(supplierId);
+                titleEl.textContent = 'Chỉnh sửa Mối hàng';
+                editIdEl.value = sup.id;
+                document.getElementById('sup-name-input').value = sup.name || '';
+                document.getElementById('sup-addr-input').value = sup.address || '';
+                document.getElementById('sup-phone-input').value = sup.phone || '';
+                document.getElementById('sup-alias-input').value = Array.isArray(sup.aliases) ? sup.aliases.join(', ') : '';
+                tempSupplierItemsBuffer = appState.templates
+                    .filter(t => t.supplierId === sup.id)
+                    .map(t => ({ id: t.id, name: t.name, unit: t.unit }));
+            } else {
+                titleEl.textContent = 'Thêm Mối hàng mới';
+                editIdEl.value = '';
+                document.getElementById('sup-name-input').value = '';
+                document.getElementById('sup-addr-input').value = '';
+                document.getElementById('sup-phone-input').value = '';
+                document.getElementById('sup-alias-input').value = '';
+                tempSupplierItemsBuffer = [];
+            }
+
+            document.getElementById('sup-new-item-name').value = '';
+            document.getElementById('sup-new-item-unit').value = 'kg';
+            renderTempSupplierItems();
+            document.getElementById('modal-supplier').classList.remove('hidden');
+        }
+
+        function renderTempSupplierItems() {
+            const box = document.getElementById('sup-modal-items-list');
+            if (tempSupplierItemsBuffer.length === 0) {
+                box.innerHTML = `<span style="font-size: 11px; color: var(--slate-400); font-style: italic;">Chưa có nguyên liệu mặc định nào gán cho mối này.</span>`;
+                return;
+            }
+            box.innerHTML = tempSupplierItemsBuffer.map((it, idx) => `
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1px solid var(--slate-300); padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 700;">
+                    <span>${it.name} (${it.unit})</span>
+                    <button type="button" onclick="removeTempSupplierItem(${idx})" style="border:none; background:none; color:var(--rose); font-weight:800; cursor:pointer;">×</button>
+                </span>
+            `).join('');
+        }
+
+        function addTempSupplierItem() {
+            const nameEl = document.getElementById('sup-new-item-name');
+            const unitEl = document.getElementById('sup-new-item-unit');
+            const name = nameEl.value.trim();
+            const unit = unitEl.value.trim() || 'kg';
+            if (!name) return;
+            tempSupplierItemsBuffer.push({ id: 'tpl_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6), name, unit });
+            nameEl.value = '';
+            renderTempSupplierItems();
+        }
+
+        function removeTempSupplierItem(idx) {
+            tempSupplierItemsBuffer.splice(idx, 1);
+            renderTempSupplierItems();
+        }
+
+        function saveSupplierForm() {
+            const editId = document.getElementById('edit-supplier-id').value;
+            const name = document.getElementById('sup-name-input').value.trim();
+            const address = document.getElementById('sup-addr-input').value.trim();
+            const phone = document.getElementById('sup-phone-input').value.trim();
+            const aliasesRaw = document.getElementById('sup-alias-input').value;
+
+            if (!name) { showToast('Vui lòng nhập tên nhà cung cấp!', 'error'); return; }
+
+            const aliases = aliasesRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            let targetSupId = editId;
+
+            if (editId) {
+                const existing = appState.suppliers.find(s => s.id === editId);
+                if (existing) {
+                    existing.name = name;
+                    existing.address = address;
+                    existing.phone = phone;
+                    existing.aliases = aliases;
+                }
+            } else {
+                targetSupId = 'sup_' + Date.now();
+                appState.suppliers.push({ id: targetSupId, name, address, phone, aliases });
+            }
+
+            appState.templates = appState.templates.filter(t => t.supplierId !== targetSupId);
+            tempSupplierItemsBuffer.forEach(it => {
+                appState.templates.push({ id: it.id, name: it.name, unit: it.unit, supplierId: targetSupId });
+            });
+
+            saveAppState();
+            closeModal('modal-supplier');
+            renderDebtTab();
+            renderQuickChecklist();
+            renderDailyScreen();
+            showToast(editId ? `Đã cập nhật mối hàng: ${name}` : `Đã thêm mối hàng: ${name}`);
+        }
+
+        function deleteSupplier(supplierId) {
+            const sup = getSupplierById(supplierId);
+            const used = appState.entries.some(e => e.supplierId === supplierId);
+            if (used) {
+                showToast(`Không thể xóa "${sup.name}" vì đã có lịch sử nhập hàng trong sổ!`, 'error');
+                return;
+            }
+            appState.suppliers = appState.suppliers.filter(s => s.id !== supplierId);
+            appState.templates = appState.templates.filter(t => t.supplierId !== supplierId);
+            saveAppState();
+            renderDebtTab();
+            renderQuickChecklist();
+            showToast(`Đã xóa mối hàng: ${sup.name}`);
+        }
+
+        // Modal Checklist mẫu
+        function openChecklistManagerModal() {
+            populateSupplierDropdowns();
+            renderTemplateManagerList();
+            document.getElementById('modal-checklist-mgr').classList.remove('hidden');
+        }
+
+        function renderTemplateManagerList() {
+            const list = document.getElementById('template-mgr-list');
+            list.innerHTML = appState.templates.map(tpl => {
+                const sup = getSupplierById(tpl.supplierId);
+                return `
+                    <div class="flex items-center justify-between" style="background: var(--slate-50); padding: 9px 11px; border-radius: 10px; border: 1px solid var(--slate-200); font-size: 13px;">
+                        <div>
+                            <strong>${tpl.name}</strong> (${tpl.unit})
+                            <div style="font-size: 11px; color: var(--slate-500);">${sup.name}</div>
+                        </div>
+                        <button type="button" onclick="deleteTemplateItem('${tpl.id}')" class="btn btn-soft-rose btn-sm">Xóa</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addQuickTemplateItem() {
+            const name = document.getElementById('tpl-item-name').value.trim();
+            const unit = document.getElementById('tpl-item-unit').value.trim() || 'kg';
+            const supplierId = document.getElementById('tpl-item-sup').value;
+            if (!name) return;
+            appState.templates.push({ id: 'tpl_' + Date.now(), name, unit, supplierId });
+            saveAppState();
+            document.getElementById('tpl-item-name').value = '';
+            renderTemplateManagerList();
+            renderQuickChecklist();
+            showToast(`Đã thêm "${name}" vào danh mục mẫu`);
+        }
+
+        function deleteTemplateItem(id) {
+            appState.templates = appState.templates.filter(t => t.id !== id);
+            saveAppState();
+            renderTemplateManagerList();
+            renderQuickChecklist();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // =====================================================================
+        // 10. KẾT NỐI GOOGLE SHEETS & DRIVE MIỄN PHÍ
+        // =====================================================================
+        const GOOGLE_APPS_SCRIPT_CODE = `function doPost(e) {
+  try {
+    var payload = JSON.parse(e.postData.contents);
+    var ss = getOrCreateSpreadsheet(payload.businessName || "CƠM LONG NINH");
+    var folder = getOrCreateDriveFolder("HoaDon_QuanCom_12Thang");
+
+    var uploadedUrls = {};
+    if (payload.attachments) {
+      Object.keys(payload.attachments).forEach(function(key) {
+        var att = payload.attachments[key];
+        ['invoice', 'transfer'].forEach(function(type) {
+          if (att[type] && att[type].dataUrl && att[type].dataUrl.indexOf('data:image') === 0) {
+            var base64Data = att[type].dataUrl.split(',')[1];
+            var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), 'image/jpeg', att[type].fileName.replace('/', '_'));
+            var file = folder.createFile(blob);
+            file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+            uploadedUrls[key + '_' + type] = file.getUrl();
+          }
+        });
+      });
+    }
+
+    for (var m = 1; m <= 12; m++) {
+      var mm = (m < 10 ? '0' : '') + m;
+      var sheet = ss.getSheetByName("Tháng " + mm);
+      var monthEntries = (payload.entries || []).filter(function(item) {
+        return item.date && item.date.split('-')[1] === mm;
+      });
+
+      var lastRow = sheet.getLastRow();
+      if (lastRow >= 9) {
+        sheet.getRange(9, 1, lastRow - 8, 10).clearContent();
+      }
+
+      if (monthEntries.length > 0) {
+        var rows = monthEntries.map(function(item, idx) {
+          var unitPrice = Math.round(item.totalPrice / item.qty);
+          var attKey = item.date + '_' + item.supplierId;
+          var imgLink = uploadedUrls[attKey + '_invoice'] || uploadedUrls[attKey + '_transfer'] || item.photoLabel || '';
+          return [idx + 1, item.dateFormatted, item.supplierFull, item.itemName, item.unit, item.qty, unitPrice, item.totalPrice, item.status, imgLink];
+        });
+        sheet.getRange(9, 1, rows.length, 10).setValues(rows);
+      }
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok", sheetUrl: ss.getUrl() })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function getOrCreateSpreadsheet(bizName) {
+  var props = PropertiesService.getScriptProperties();
+  var ssId = props.getProperty("SHEET_ID");
+  if (ssId) { try { return SpreadsheetApp.openById(ssId); } catch (e) {} }
+  var ss = SpreadsheetApp.create("Bảng Kê 01/TNDN 12 Tháng - " + bizName);
+  props.setProperty("SHEET_ID", ss.getId());
+  for (var m = 1; m <= 12; m++) {
+    var mm = (m < 10 ? '0' : '') + m;
+    var name = "Tháng " + mm;
+    var sheet = m === 1 ? ss.getSheets()[0].setName(name) : ss.insertSheet(name);
+    sheet.getRange("A1").setValue("Hộ kinh doanh: " + bizName);
+    sheet.getRange("G1").setValue("Mẫu số: 01/TNDN (TT 78/2014/TT-BTC)");
+    sheet.getRange("A4").setValue("BẢNG KÊ THU MUA HÀNG HÓA, DỊCH VỤ MUA VÀO KHÔNG CÓ HÓA ĐƠN - THÁNG " + mm);
+    var headers = [["STT", "Ngày tháng thu mua", "Tên người bán - Địa chỉ", "Tên mặt hàng thu mua", "Đơn vị tính", "Số lượng", "Đơn giá (đ)", "Thành tiền mua (đ)", "Ghi chú - Chứng từ", "ẢNH HÓA ĐƠN / CK"]];
+    sheet.getRange("A8:J8").setValues(headers).setBackground("#bae6fd").setFontWeight("bold");
+  }
+  return ss;
+}
+
+function getOrCreateDriveFolder(folderName) {
+  var folders = DriveApp.getFoldersByName(folderName);
+  return folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+}`;
+
+        function openAppsScriptGuideModal() {
+            document.getElementById('apps-script-code-box').textContent = GOOGLE_APPS_SCRIPT_CODE;
+            document.getElementById('modal-apps-script').classList.remove('hidden');
+        }
+
+        function copyAppsScriptCode() {
+            const ta = document.createElement('textarea');
+            ta.value = GOOGLE_APPS_SCRIPT_CODE;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('Đã sao chép mã Google Apps Script!');
+        }
+
+        function saveGoogleScriptUrl() {
+            const url = document.getElementById('google-script-url').value.trim();
+            appState.profile.googleScriptUrl = url;
+            saveAppState();
+            updateSyncStatusUI();
+            showToast(url ? 'Đã lưu liên kết Google Sheets!' : 'Đã xóa liên kết Google Sheets');
+        }
+
+        function updateSyncStatusUI() {
+            const dot = document.getElementById('sync-status-dot');
+            const text = document.getElementById('sync-status-text');
+            if (appState.profile.googleScriptUrl) {
+                dot.classList.add('connected');
+                text.textContent = 'Đã kết nối Google Sheets';
+            } else {
+                dot.classList.remove('connected');
+                text.textContent = 'Lưu máy (Chưa nối Sheet)';
+            }
+        }
+
+        async function syncAllToGoogleSheets() {
+            const url = appState.profile.googleScriptUrl;
+            if (!url) {
+                showToast('Chưa dán link Google Apps Script! Hãy vào tab Cài đặt.', 'info');
+                switchTab('settings');
+                return;
+            }
+            showToast('Đang đẩy dữ liệu & ảnh lên Google Sheets...', 'info');
+            const enriched = appState.entries.map(e => {
+                const sup = getSupplierById(e.supplierId);
+                const att = appState.attachments[`${e.date}_${e.supplierId}`] || {};
+                return {
+                    ...e,
+                    dateFormatted: formatDateVN(e.date),
+                    supplierFull: sup.address ? `${sup.name} - ${sup.address}` : sup.name,
+                    photoLabel: [att.invoice?.fileName, att.transfer?.fileName].filter(Boolean).join(' | ')
+                };
+            });
+
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        businessName: appState.profile.businessName,
+                        entries: enriched,
+                        attachments: appState.attachments
+                    })
+                });
+                showToast('Đã đồng bộ dữ liệu 12 tháng & ảnh lên Google Sheets!');
+            } catch (err) {
+                showToast('Lỗi mạng khi đồng bộ Google Sheets.', 'error');
+            }
+        }
+
+        // =====================================================================
+        // 11. CÀI ĐẶT QUÁN, SAO LƯU & KHÔI PHỤC JSON
+        // =====================================================================
+        function saveBusinessProfile() {
+            appState.profile.businessName = document.getElementById('set-biz-name').value.trim() || 'CƠM LONG NINH';
+            appState.profile.taxId = document.getElementById('set-tax-id').value.trim();
+            appState.profile.address = document.getElementById('set-address').value.trim();
+            saveAppState();
+            document.getElementById('header-store-name').textContent = appState.profile.businessName;
+            renderLedgerTable();
+            showToast('Đã lưu thông tin quán!');
+        }
+
+        function backupDataJSON() {
+            const blob = new Blob([JSON.stringify(appState, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SaoLuu_ComLongNinh_${getTodayISO()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Đã tải file sao lưu JSON!');
+        }
+
+        function restoreDataJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                try {
+                    const parsed = JSON.parse(ev.target.result);
+                    if (!parsed.entries || !parsed.suppliers) throw new Error('Invalid');
+                    appState = parsed;
+                    saveAppState();
+                    initAppUI();
+                    showToast('Khôi phục dữ liệu thành công!');
+                } catch (e) {
+                    showToast('File sao lưu không hợp lệ!', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetToSampleData() {
+            appState = buildInitialSampleData();
+            saveAppState();
+            initAppUI();
+            showToast('Đã nạp lại dữ liệu mẫu quán cơm!');
+        }
+
+        // =====================================================================
+        // 12. ĐIỀU HƯỚNG TAB & KHỞI TẠO ỨNG DỤNG
+        // =====================================================================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-tab') === tabName);
+            });
+
+            if (tabName === 'daily') {
+                renderDailyScreen();
+                renderQuickChecklist();
+            } else if (tabName === 'note') {
+                document.getElementById('note-target-date-label').textContent = formatDateVN(activeDate);
+                runSmartNoteParser(false);
+            } else if (tabName === 'ledger') {
+                renderTwelveMonthsBar();
+                renderLedgerTable();
+            } else if (tabName === 'debt') {
+                renderDebtTab();
+            }
+        }
+
+        function initAppUI() {
+            document.getElementById('header-store-name').textContent = appState.profile.businessName;
+            document.getElementById('set-biz-name').value = appState.profile.businessName;
+            document.getElementById('set-tax-id').value = appState.profile.taxId || '';
+            document.getElementById('set-address').value = appState.profile.address || '';
+            document.getElementById('google-script-url').value = appState.profile.googleScriptUrl || '';
+
+            const datePicker = document.getElementById('active-date-picker');
+            datePicker.value = activeDate;
+            datePicker.onchange = (e) => {
+                if (e.target.value) {
+                    activeDate = e.target.value;
+                    selectedLedgerMonth = parseInt(activeDate.split('-')[1], 10);
+                    selectedLedgerYear = parseInt(activeDate.split('-')[0], 10);
+                    renderDailyScreen();
+                    renderLedgerTable();
+                    document.getElementById('note-target-date-label').textContent = formatDateVN(activeDate);
+                }
+            };
+
+            const noteInput = document.getElementById('smart-note-input');
+            noteInput.addEventListener('input', () => runSmartNoteParser(false));
+            noteInput.addEventListener('change', () => runSmartNoteParser(false));
+            noteInput.addEventListener('paste', () => setTimeout(() => runSmartNoteParser(false), 60));
+
+            updateSyncStatusUI();
+            updateDebtBadge();
+            renderQuickChecklist();
+            renderDailyScreen();
+            renderTwelveMonthsBar();
+            renderLedgerTable();
+        }
+
+        window.onload = function () {
+            initAppUI();
+        };
+    </script>
+</body>
+</html>
